@@ -6,6 +6,10 @@
   "timeout": "3000ms",
   "cache_ttl": "300s",
   "output_encoding": "json",
+  "plugin": {
+    "pattern": ".so",
+    "folder": "/opt/krakend/plugins/"
+  },
   "endpoints": [
     {
       "endpoint": "/api/v1/messages",
@@ -16,7 +20,12 @@
           "max_rate": 100,
           "client_max_rate": 10,
           "strategy": "ip"
-        }
+        },
+        "validation/cel": [
+          {
+            "check_expr": "has(req_body.sender_id) && has(req_body.recipient_id) && has(req_body.content)"
+          }
+        ]
       },
       "backend": [
         {

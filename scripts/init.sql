@@ -9,23 +9,18 @@ CREATE TABLE IF NOT EXISTS chat_messages (
 CREATE INDEX IF NOT EXISTS idx_chat_messages_sender_id ON chat_messages(sender_id);
 CREATE INDEX IF NOT EXISTS idx_chat_messages_recipient_id ON chat_messages(recipient_id);
 
--- Create a type for bulk ingestion of messages
-CREATE TYPE chat_message_type AS (
-    sender_id VARCHAR(255),
-    recipient_id VARCHAR(255),
-    message_content TEXT
-);
-
--- Stored procedure for bulk inserting messages
+-- Stored procedure for bulk inserting messages using parallel arrays
+-- This is much safer and faster for pgx than composite types which require manual string formatting
 CREATE OR REPLACE PROCEDURE bulk_insert_messages(
-    messages chat_message_type[]
+    sender_ids VARCHAR(255)[],
+    recipient_ids VARCHAR(255)[],
+    contents TEXT[]
 )
 LANGUAGE plpgsql
 AS $$
 BEGIN
     INSERT INTO chat_messages (sender_id, recipient_id, message_content)
-    SELECT m.sender_id, m.recipient_id, m.message_content
-    FROM unnest(messages) AS m;
+    SELECT unnest(sender_ids), unnest(recipient_ids), unnest(contents);
 END;
 $$;
 
