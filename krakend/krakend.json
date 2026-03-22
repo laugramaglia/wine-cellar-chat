@@ -1,0 +1,51 @@
+{
+  "$schema": "https://www.krakend.io/schema/v3.json",
+  "version": 3,
+  "name": "Chat Gateway",
+  "port": 8080,
+  "timeout": "3000ms",
+  "cache_ttl": "300s",
+  "output_encoding": "json",
+  "endpoints": [
+    {
+      "endpoint": "/api/v1/messages",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "extra_config": {
+        "qos/ratelimit/router": {
+          "max_rate": 100,
+          "client_max_rate": 10,
+          "strategy": "ip"
+        }
+      },
+      "backend": [
+        {
+          "host": [
+            "amqp://guest:guest@chat_rabbitmq:5672/"
+          ],
+          "disable_host_sanitize": true,
+          "encoding": "no-op",
+          "extra_config": {
+            "backend/amqp/producer": {
+              "name": "chat_exchange",
+              "exchange_type": "topic",
+              "routing_key": "chat.message.new",
+              "durable": true,
+              "auto_delete": false,
+              "mandatory": false,
+              "immediate": false
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "extra_config": {
+    "telemetry/logging": {
+      "level": "DEBUG",
+      "prefix": "[KRAKEND]",
+      "syslog": false,
+      "stdout": true
+    }
+  }
+}
