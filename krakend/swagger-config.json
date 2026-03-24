@@ -1,0 +1,12 @@
+{
+  "dom_id": "#swagger-ui",
+  "filter": false,
+  "layout": "BaseLayout",
+  "presets": [
+    "SwaggerUIBundle.presets.apis",
+    "SwaggerUIStandalonePreset"
+  ],
+  "queryConfigEnabled": false,
+  "url": "/etc/krakend/openapi.json",
+  "validatorUrl": null
+}

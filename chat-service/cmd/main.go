@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -13,18 +14,32 @@ import (
 	"chat-service/data/repoImpl"
 	"chat-service/domain"
 	"chat-service/presentation"
+
+	"wine-cellar-chat/pkg/health"
 )
 
 func main() {
+	// 0. Health check logic
+	healthCheck := flag.Bool("healthcheck", false, "run health check")
+	port := flag.String("port", "8080", "port for the service")
+	flag.Parse()
+
+	if *healthCheck {
+		health.Check(*port)
+	}
+
+	health.StartHealthServer(*port)
+
 	// 1. Read Configuration
 	dbUser := getEnv("DB_USER", "chatuser")
 	dbPass := getEnv("DB_PASSWORD", "chatpassword")
 	dbHost := getEnv("DB_HOST", "localhost")
 	dbPort := getEnv("DB_PORT", "5432")
 	dbName := getEnv("DB_NAME", "chatdb")
+	dbSchema := getEnv("DB_SCHEMA", "public")
 	rmqURL := getEnv("RMQ_URL", "amqp://guest:guest@localhost:5672/")
 
-	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPass, dbHost, dbPort, dbName)
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable&search_path=%s", dbUser, dbPass, dbHost, dbPort, dbName, dbSchema)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

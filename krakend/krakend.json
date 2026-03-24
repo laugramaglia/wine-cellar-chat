@@ -14,7 +14,7 @@
     {
       "endpoint": "/api/v1/messages",
       "method": "POST",
-      "output_encoding": "no-op",
+      "output_encoding": "json",
       "extra_config": {
         "qos/ratelimit/router": {
           "max_rate": 100,
@@ -30,17 +30,17 @@
       "backend": [
         {
           "host": [
-            "amqp://guest:guest@chat_rabbitmq:5672/"
+            "amqp://guest:guest@chat_rabbitmq:5672"
           ],
+          "url_pattern": "/",
           "disable_host_sanitize": true,
-          "encoding": "no-op",
+          "encoding": "json",
           "extra_config": {
             "backend/amqp/producer": {
               "name": "chat_exchange",
-              "exchange_type": "topic",
+              "exchange": "chat_exchange",
               "routing_key": "chat.message.new",
               "durable": true,
-              "auto_delete": false,
               "mandatory": false,
               "immediate": false
             }
@@ -50,6 +50,9 @@
     }
   ],
   "extra_config": {
+    "krakend-healthchecker": {
+      "listen_address": ":8080"
+    },
     "telemetry/logging": {
       "level": "DEBUG",
       "prefix": "[KRAKEND]",

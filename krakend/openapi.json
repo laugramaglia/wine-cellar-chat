@@ -1,0 +1,124 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Chat Gateway",
+    "description": "Auto-generated API documentation from KrakenD configuration",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "paths": {
+    "/api/v1/messages": {
+      "post": {
+        "summary": "POST /api/v1/messages",
+        "description": "KrakenD gateway endpoint forwarding to backend",
+        "tags": [
+          "gateway"
+        ],
+        "requestBody": {
+          "description": "Request payload",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "description": "Message content",
+                    "example": "Hello, world!"
+                  },
+                  "recipient_id": {
+                    "type": "string",
+                    "description": "ID of the message recipient",
+                    "example": "user-456"
+                  },
+                  "sender_id": {
+                    "type": "string",
+                    "description": "ID of the message sender",
+                    "example": "user-123"
+                  }
+                },
+                "required": [
+                  "sender_id",
+                  "recipient_id",
+                  "content"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted - Message queued successfully"
+          },
+          "400": {
+            "description": "Bad Request - Validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests - Rate limit exceeded"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "Message content",
+            "example": "Hello, world!"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Message creation timestamp"
+          },
+          "id": {
+            "type": "integer",
+            "description": "Message unique identifier"
+          },
+          "recipient_id": {
+            "type": "string",
+            "description": "ID of the message recipient",
+            "example": "user-456"
+          },
+          "sender_id": {
+            "type": "string",
+            "description": "ID of the message sender",
+            "example": "user-123"
+          }
+        },
+        "required": [
+          "sender_id",
+          "recipient_id",
+          "content"
+        ]
+      }
+    }
+  }
+}

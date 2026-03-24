@@ -1,3 +1,6 @@
+CREATE SCHEMA IF NOT EXISTS chat;
+SET search_path TO chat;
+
 CREATE TABLE IF NOT EXISTS chat_messages (
     id SERIAL PRIMARY KEY,
     sender_id VARCHAR(255) NOT NULL,

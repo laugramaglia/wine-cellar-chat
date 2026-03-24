@@ -1,4 +1,7 @@
-version: '3.8'
+x-postgres-common: &postgres-common
+  POSTGRES_USER: ${POSTGRES_USER}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  POSTGRES_DB: ${POSTGRES_DB}
 
 services:
   krakend:
@@ -6,27 +9,79 @@ services:
     container_name: krakend_gateway
     command: run -c /etc/krakend/krakend.json
     volumes:
-      - ./krakend:/etc/krakend
+      - krakend_config:/etc/krakend
     ports:
       - "8080:8080"
+    networks:
+      - chat-network
     depends_on:
       rabbitmq:
         condition: service_healthy
+    healthcheck:
+      # Use wget as curl is missing in KrakenD image
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/__health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  # OpenAPI Generator - Generate OpenAPI spec from KrakenD config
+  docs-generator:
+    build:
+      context: ./docs-generator
+      dockerfile: Dockerfile
+    container_name: docs_generator
+    volumes:
+      - krakend_config:/etc/krakend:rw
+    networks:
+      - chat-network
+    restart: "no"
+    healthcheck:
+      test: ["CMD", "/docs-generator", "--healthcheck"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 2s
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger_ui
+    ports:
+      - "8081:8080"
+    environment:
+      SWAGGER_JSON_FILE: /usr/share/nginx/html/specs/openapi.json
+      FILTER: "false"
+      SHOW_EXTENSIONS: "false"
+      SHOW_COMMON_EXTENSIONS: "false"
+      DOC_EXPANSION: "list"
+    volumes:
+      - krakend_config:/usr/share/nginx/html/specs:ro
+    networks:
+      - chat-network
+    depends_on:
+      docs-generator:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
 
   postgres:
-    image: postgres:15-alpine
-    container_name: chat_postgres
+    image: postgres:18-alpine
+    container_name: postgres
     environment:
-      POSTGRES_USER: chatuser
-      POSTGRES_PASSWORD: chatpassword
-      POSTGRES_DB: chatdb
-    ports:
-      - "5432:5432"
+      <<: *postgres-common
+    expose:
+      - "5432"
+    networks:
+      - chat-network
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U chatuser -d chatdb"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -35,34 +90,76 @@ services:
     image: rabbitmq:3.12-management-alpine
     container_name: chat_rabbitmq
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    expose:
+      - "5672"
+      - "15672"
+    networks:
+      - chat-network
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
       interval: 5s
       timeout: 5s
       retries: 5
 
+
+  # Database Migrations - Run before services start
+  # In production, expects external PostgreSQL (AWS RDS, Azure Database, etc.)
+  migrations:
+    image: migrate/migrate:latest
+    environment:
+      <<: *postgres-common
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+    networks:
+      - chat-network
+    volumes:
+      - ./migrations:/migrations
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: -path=/migrations/
+      -database "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable"
+      up
+    restart: "no"
+
   chat-service:
     build:
-      context: ./chat-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: chat-service/Dockerfile
     container_name: chat_microservice
     environment:
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_USER=chatuser
-      - DB_PASSWORD=chatpassword
-      - DB_NAME=chatdb
-      - RMQ_URL=amqp://guest:guest@rabbitmq:5672/
+      - DB_HOST=${POSTGRES_HOST}
+      - DB_PORT=${POSTGRES_PORT}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_NAME=${POSTGRES_DB}
+      - DB_SCHEMA=chat
+      - RMQ_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@${RABBITMQ_HOST}:${RABBITMQ_PORT}/
+    networks:
+      - chat-network
+    healthcheck:
+      test: ["CMD", "./chat-service", "--healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
     depends_on:
       postgres:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
 
+networks:
+  chat-network:
+    driver: bridge
+
 volumes:
   pgdata:
+  krakend_config:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: "${PWD}/krakend"
