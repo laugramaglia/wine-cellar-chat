@@ -49,7 +49,8 @@ services:
     ports:
       - "8081:8080"
     environment:
-      SWAGGER_JSON_FILE: /usr/share/nginx/html/specs/openapi.json
+      SWAGGER_JSON: /usr/share/nginx/html/specs/openapi.json
+      LAYOUT: "BaseLayout"
       FILTER: "false"
       SHOW_EXTENSIONS: "false"
       SHOW_COMMON_EXTENSIONS: "false"
