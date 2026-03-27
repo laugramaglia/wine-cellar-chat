@@ -312,39 +312,24 @@ func generateOpenAPI() error {
 	return nil
 }
 
-// extractRequiredFields parses CEL validation expressions to find required fields
+// extractRequiredFields parses JSON Schema validation to find required fields
 func extractRequiredFields(extraConfig map[string]interface{}) []string {
 	var required []string
 
-	// Look for validation/cel config
-	celConfig, ok := extraConfig["validation/cel"].([]interface{})
+	// Look for validation/json-schema config
+	schemaConfig, ok := extraConfig["validation/json-schema"].(map[string]interface{})
 	if !ok {
 		return required
 	}
 
-	// Regex to extract field names from has(req_body.field_name)
-	fieldRegex := regexp.MustCompile(`req_body\.(\w+)`)
+	reqFields, ok := schemaConfig["required"].([]interface{})
+	if !ok {
+		return required
+	}
 
-	for _, item := range celConfig {
-		config, ok := item.(map[string]interface{})
-		if !ok {
-			continue
-		}
-		checkExpr, ok := config["check_expr"].(string)
-		if !ok {
-			continue
-		}
-
-		// Extract field names from the expression
-		matches := fieldRegex.FindAllStringSubmatch(checkExpr, -1)
-		for _, match := range matches {
-			if len(match) > 1 {
-				field := match[1]
-				// Avoid duplicates
-				if !contains(required, field) {
-					required = append(required, field)
-				}
-			}
+	for _, req := range reqFields {
+		if strReq, ok := req.(string); ok {
+			required = append(required, strReq)
 		}
 	}
 
