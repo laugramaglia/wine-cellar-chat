@@ -24,29 +24,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "content": {
-                    "type": "string",
-                    "description": "Message content",
-                    "example": "Hello, world!"
-                  },
-                  "recipient_id": {
-                    "type": "string",
-                    "description": "ID of the message recipient",
-                    "example": "user-456"
-                  },
-                  "sender_id": {
-                    "type": "string",
-                    "description": "ID of the message sender",
-                    "example": "user-123"
-                  }
-                },
-                "required": [
-                  "sender_id",
-                  "recipient_id",
-                  "content"
-                ]
+                "$ref": "#/components/schemas/Message"
               }
             }
           }
