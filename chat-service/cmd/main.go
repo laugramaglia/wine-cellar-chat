@@ -11,18 +11,17 @@ import (
 	"syscall"
 	"time"
 
-	"chat-service/data/datasource"
-	"chat-service/data/repoImpl"
-	"chat-service/domain"
-	"chat-service/presentation"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"chat-service/handler"
+	"chat-service/repository"
+	"chat-service/service"
 
 	"wine-cellar-chat/pkg/health"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 func main() {
-	// 0. Health check logic
 	healthCheck := flag.Bool("healthcheck", false, "run health check")
 	port := flag.String("port", "8080", "port for the service")
 	flag.Parse()
@@ -31,28 +30,19 @@ func main() {
 		health.Check(*port)
 	}
 
-
-
-	// 1. Read Configuration
-	dbUser := getEnv("DB_USER", "chatuser")
-	dbPass := getEnv("DB_PASSWORD", "chatpassword")
-	dbHost := getEnv("DB_HOST", "localhost")
-	dbPort := getEnv("DB_PORT", "5432")
-	dbName := getEnv("DB_NAME", "chatdb")
-	dbSchema := getEnv("DB_SCHEMA", "public")
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable&search_path=%s",
+		getEnv("DB_USER", "chatuser"), getEnv("DB_PASSWORD", "chatpassword"),
+		getEnv("DB_HOST", "localhost"), getEnv("DB_PORT", "5432"),
+		getEnv("DB_NAME", "chatdb"), getEnv("DB_SCHEMA", "public"))
 	rmqURL := getEnv("RMQ_URL", "amqp://guest:guest@localhost:5672/")
-
-	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable&search_path=%s", dbUser, dbPass, dbHost, dbPort, dbName, dbSchema)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	// 2. Initialize Data Layer (Datasource & Repository)
-	// Add retry logic for DB and RabbitMQ since docker-compose might start them slower than the microservice
-	var db *datasource.PostgresDB
+	var repo *repository.PostgresRepository
 	var err error
 	for i := 0; i < 5; i++ {
-		db, err = datasource.NewPostgresDB(ctx, dsn)
+		repo, err = repository.NewPostgresRepository(ctx, dsn)
 		if err == nil {
 			break
 		}
@@ -60,20 +50,15 @@ func main() {
 		time.Sleep(2 * time.Second)
 	}
 	if err != nil {
-		log.Fatalf("Could not connect to database after retries: %v", err)
+		log.Fatalf("Could not connect to database: %v", err)
 	}
-	defer db.Close()
-
-	repo := repoImpl.NewPostgresMessageRepository(db)
 	defer repo.Close()
 
-	// 3. Initialize Domain Layer (Use Cases)
-	chatUseCase := domain.NewChatUseCase(repo)
+	chatSvc := service.NewChatService(repo)
 
-	// 4. Initialize Presentation Layer (RabbitMQ Consumer & HTTP Handler)
-	var consumer *presentation.RabbitMQConsumer
+	var rmqHandler *handler.RabbitMQHandler
 	for i := 0; i < 5; i++ {
-		consumer, err = presentation.NewRabbitMQConsumer(rmqURL, chatUseCase)
+		rmqHandler, err = handler.NewRabbitMQHandler(rmqURL, chatSvc)
 		if err == nil {
 			break
 		}
@@ -81,38 +66,23 @@ func main() {
 		time.Sleep(2 * time.Second)
 	}
 	if err != nil {
-		log.Fatalf("Could not connect to RabbitMQ after retries: %v", err)
+		log.Fatalf("Could not connect to RabbitMQ: %v", err)
 	}
-	defer consumer.Close()
+	defer rmqHandler.Close()
 
-	if err := consumer.Start(ctx); err != nil {
-		log.Fatalf("Could not start RabbitMQ consumer: %v", err)
+	if err := rmqHandler.Start(ctx); err != nil {
+		log.Fatalf("Could not start RabbitMQ handler: %v", err)
 	}
 
-	// 5. Initialize Presentation Layer (MessageController & Chi Router)
-	messageController := presentation.NewMessageController(chatUseCase)
-	
+	httpHandler := handler.NewHTTPHandler(chatSvc)
+
 	r := chi.NewRouter()
-	
-	// A good base middleware stack
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
-	r.Use(middleware.Timeout(60 * time.Second))
+	r.Use(middleware.RequestID, middleware.RealIP, middleware.Logger, middleware.Recoverer, middleware.Timeout(60*time.Second))
 
-	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("healthy"))
-	})
+	r.Get("/health", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK); w.Write([]byte("healthy")) })
+	r.Mount("/api/v1/messages", httpHandler.Routes())
 
-	r.Mount("/api/v1/messages", messageController.Routes())
-
-	server := &http.Server{
-		Addr:    ":" + *port,
-		Handler: r,
-	}
-
+	server := &http.Server{Addr: ":" + *port, Handler: r}
 	go func() {
 		log.Printf("HTTP Server starting on port %s", *port)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
@@ -120,12 +90,10 @@ func main() {
 		}
 	}()
 
-	// 6. Handle graceful shutdown
 	log.Println("Chat microservice started and running...")
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	<-sigChan
-
 	log.Println("Shutting down gracefully...")
 }
 
