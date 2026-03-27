@@ -21,11 +21,15 @@
           "client_max_rate": 10,
           "strategy": "ip"
         },
-        "validation/cel": [
-          {
-            "check_expr": "has(req_body.sender_id) && has(req_body.recipient_id) && has(req_body.content)"
+        "validation/json-schema": {
+          "type": "object",
+          "required": ["sender_id", "recipient_id", "content"],
+          "properties": {
+            "sender_id": { "type": "number" },
+            "recipient_id": { "type": "number" },
+            "content": { "type": "string" }
           }
-        ]
+        }
       },
       "backend": [
         {
