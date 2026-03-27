@@ -25,8 +25,8 @@
           "type": "object",
           "required": ["sender_id", "recipient_id", "content"],
           "properties": {
-            "sender_id": { "type": "number" },
-            "recipient_id": { "type": "number" },
+            "sender_id": { "type": "integer" },
+            "recipient_id": { "type": "integer" },
             "content": { "type": "string" }
           }
         }
@@ -34,21 +34,11 @@
       "backend": [
         {
           "host": [
-            "amqp://guest:guest@chat_rabbitmq:5672"
+            "http://chat_microservice:8080"
           ],
-          "url_pattern": "/",
-          "disable_host_sanitize": true,
-          "encoding": "json",
-          "extra_config": {
-            "backend/amqp/producer": {
-              "name": "chat_exchange",
-              "exchange": "chat_exchange",
-              "routing_key": "chat.message.new",
-              "durable": true,
-              "mandatory": false,
-              "immediate": false
-            }
-          }
+          "url_pattern": "/api/v1/messages",
+          "method": "POST",
+          "encoding": "json"
         }
       ]
     }

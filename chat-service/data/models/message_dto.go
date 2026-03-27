@@ -9,8 +9,8 @@ import (
 // MessageDTO represents the data transfer object used by the presentation and data layers
 type MessageDTO struct {
 	ID        int       `json:"id"`
-	SenderID  string    `json:"sender_id"`
-	Recipient string    `json:"recipient_id"`
+	SenderID  int       `json:"sender_id"`
+	Recipient int       `json:"recipient_id"`
 	Content   string    `json:"content"`
 	CreatedAt time.Time `json:"created_at"`
 }

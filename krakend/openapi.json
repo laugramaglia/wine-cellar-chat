@@ -24,7 +24,29 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Message"
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "description": "Message content",
+                    "example": "Hello, world!"
+                  },
+                  "recipient_id": {
+                    "type": "integer",
+                    "description": "ID of the message recipient",
+                    "example": "456"
+                  },
+                  "sender_id": {
+                    "type": "integer",
+                    "description": "ID of the message sender",
+                    "example": "123"
+                  }
+                },
+                "required": [
+                  "sender_id",
+                  "recipient_id",
+                  "content"
+                ]
               }
             }
           }
@@ -81,14 +103,14 @@
             "description": "Message unique identifier"
           },
           "recipient_id": {
-            "type": "string",
+            "type": "integer",
             "description": "ID of the message recipient",
-            "example": "user-456"
+            "example": "456"
           },
           "sender_id": {
-            "type": "string",
+            "type": "integer",
             "description": "ID of the message sender",
-            "example": "user-123"
+            "example": "123"
           }
         },
         "required": [

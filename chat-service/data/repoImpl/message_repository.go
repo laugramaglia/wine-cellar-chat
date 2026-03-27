@@ -63,7 +63,7 @@ func (r *PostgresMessageRepository) SaveMessage(msg *domain.Message) error {
 }
 
 // GetMessages retrieves messages for a specific user using the Stored Procedure (Function)
-func (r *PostgresMessageRepository) GetMessages(userID string, limit int, offset int) ([]*domain.Message, error) {
+func (r *PostgresMessageRepository) GetMessages(userID int, limit int, offset int) ([]*domain.Message, error) {
 	query := "SELECT id, sender_id, recipient_id, message_content, created_at FROM get_user_messages($1, $2, $3)"
 	rows, err := r.db.Pool.Query(context.Background(), query, userID, limit, offset)
 	if err != nil {
@@ -117,8 +117,8 @@ func (r *PostgresMessageRepository) flushBatch(batch []*domain.Message) {
 
 	// Creating parallel arrays natively supported by pgx to avoid string-casting errors when
 	// inserting user content like commas and parentheses
-	var senders []string
-	var recipients []string
+	var senders []int
+	var recipients []int
 	var contents []string
 
 	for _, msg := range batch {
@@ -127,7 +127,7 @@ func (r *PostgresMessageRepository) flushBatch(batch []*domain.Message) {
 		contents = append(contents, msg.Content)
 	}
 
-	query := "CALL bulk_insert_messages($1::VARCHAR[], $2::VARCHAR[], $3::TEXT[])"
+	query := "CALL bulk_insert_messages($1::INT[], $2::INT[], $3::TEXT[])"
 
 	// pgx natively understands Go string slices -> PostgreSQL Text/Varchar Arrays
 	_, err := r.db.Pool.Exec(context.Background(), query, senders, recipients, contents)

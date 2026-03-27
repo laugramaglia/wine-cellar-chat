@@ -131,7 +131,7 @@ func (c *RabbitMQConsumer) handleMessage(d amqp.Delivery) {
 		return
 	}
 
-	log.Printf("Received message: Sender=%s, Recipient=%s", dto.SenderID, dto.Recipient)
+	log.Printf("Received message: Sender=%v, Recipient=%v", dto.SenderID, dto.Recipient)
 
 	// Save using Clean Architecture domain logic
 	err := c.useCase.ProcessIncomingMessage(dto.ToDomain())

@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -14,6 +15,8 @@ import (
 	"chat-service/data/repoImpl"
 	"chat-service/domain"
 	"chat-service/presentation"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 
 	"wine-cellar-chat/pkg/health"
 )
@@ -28,7 +31,7 @@ func main() {
 		health.Check(*port)
 	}
 
-	health.StartHealthServer(*port)
+
 
 	// 1. Read Configuration
 	dbUser := getEnv("DB_USER", "chatuser")
@@ -67,7 +70,7 @@ func main() {
 	// 3. Initialize Domain Layer (Use Cases)
 	chatUseCase := domain.NewChatUseCase(repo)
 
-	// 4. Initialize Presentation Layer (RabbitMQ Consumer)
+	// 4. Initialize Presentation Layer (RabbitMQ Consumer & HTTP Handler)
 	var consumer *presentation.RabbitMQConsumer
 	for i := 0; i < 5; i++ {
 		consumer, err = presentation.NewRabbitMQConsumer(rmqURL, chatUseCase)
@@ -86,7 +89,38 @@ func main() {
 		log.Fatalf("Could not start RabbitMQ consumer: %v", err)
 	}
 
-	// 5. Handle graceful shutdown
+	// 5. Initialize Presentation Layer (MessageController & Chi Router)
+	messageController := presentation.NewMessageController(chatUseCase)
+	
+	r := chi.NewRouter()
+	
+	// A good base middleware stack
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.Timeout(60 * time.Second))
+
+	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("healthy"))
+	})
+
+	r.Mount("/api/v1/messages", messageController.Routes())
+
+	server := &http.Server{
+		Addr:    ":" + *port,
+		Handler: r,
+	}
+
+	go func() {
+		log.Printf("HTTP Server starting on port %s", *port)
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("HTTP server failed: %v", err)
+		}
+	}()
+
+	// 6. Handle graceful shutdown
 	log.Println("Chat microservice started and running...")
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)

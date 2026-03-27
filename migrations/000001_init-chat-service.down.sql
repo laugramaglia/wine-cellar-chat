@@ -1,5 +1,5 @@
 DROP SCHEMA IF EXISTS chat CASCADE;
 
-DROP FUNCTION IF EXISTS get_user_messages(VARCHAR, INT, INT);
-DROP PROCEDURE IF EXISTS bulk_insert_messages(VARCHAR[], VARCHAR[], TEXT[]);
+DROP FUNCTION IF EXISTS get_user_messages(INT, INT, INT);
+DROP PROCEDURE IF EXISTS bulk_insert_messages(INT[], INT[], TEXT[]);
 DROP TABLE IF EXISTS chat_messages;

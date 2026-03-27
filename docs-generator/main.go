@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"regexp"
 	"strings"
 	"time"
 )
@@ -116,7 +115,6 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
-	fmt.Println("OpenAPI spec generated successfully at /etc/krakend/openapi.json")
 }
 
 func runHealthcheckServer() error {
@@ -169,14 +167,14 @@ func generateOpenAPI() error {
 							Description: "Message unique identifier",
 						},
 						"sender_id": {
-							Type:        "string",
+							Type:        "integer",
 							Description: "ID of the message sender",
-							Example:     "user-123",
+							Example:     "123",
 						},
 						"recipient_id": {
-							Type:        "string",
+							Type:        "integer",
 							Description: "ID of the message recipient",
-							Example:     "user-456",
+							Example:     "456",
 						},
 						"content": {
 							Type:        "string",
@@ -261,14 +259,14 @@ func generateOpenAPI() error {
 						Type: "object",
 						Properties: map[string]Property{
 							"sender_id": {
-								Type:        "string",
+								Type:        "integer",
 								Description: "ID of the message sender",
-								Example:     "user-123",
+								Example:     "123",
 							},
 							"recipient_id": {
-								Type:        "string",
+								Type:        "integer",
 								Description: "ID of the message recipient",
-								Example:     "user-456",
+								Example:     "456",
 							},
 							"content": {
 								Type:        "string",
@@ -309,6 +307,7 @@ func generateOpenAPI() error {
 		return fmt.Errorf("failed to write openapi.json: %w", err)
 	}
 
+	fmt.Println(string(output))
 	return nil
 }
 

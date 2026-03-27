@@ -3,8 +3,8 @@ SET search_path TO chat;
 
 CREATE TABLE IF NOT EXISTS chat_messages (
     id SERIAL PRIMARY KEY,
-    sender_id VARCHAR(255) NOT NULL,
-    recipient_id VARCHAR(255) NOT NULL,
+    sender_id INTEGER NOT NULL,
+    recipient_id INTEGER NOT NULL,
     message_content TEXT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -15,8 +15,8 @@ CREATE INDEX IF NOT EXISTS idx_chat_messages_recipient_id ON chat_messages(recip
 -- Stored procedure for bulk inserting messages using parallel arrays
 -- This is much safer and faster for pgx than composite types which require manual string formatting
 CREATE OR REPLACE PROCEDURE bulk_insert_messages(
-    sender_ids VARCHAR(255)[],
-    recipient_ids VARCHAR(255)[],
+    sender_ids INT[],
+    recipient_ids INT[],
     contents TEXT[]
 )
 LANGUAGE plpgsql
@@ -29,14 +29,14 @@ $$;
 
 -- Function for fast reads by user (sender or recipient)
 CREATE OR REPLACE FUNCTION get_user_messages(
-    user_id VARCHAR(255),
+    user_id INT,
     limit_val INT DEFAULT 50,
     offset_val INT DEFAULT 0
 )
 RETURNS TABLE (
     id INT,
-    sender_id VARCHAR(255),
-    recipient_id VARCHAR(255),
+    sender_id INT,
+    recipient_id INT,
     message_content TEXT,
     created_at TIMESTAMP WITH TIME ZONE
 )
