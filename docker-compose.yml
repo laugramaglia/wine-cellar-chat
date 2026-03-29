@@ -163,6 +163,26 @@ services:
       rabbitmq:
         condition: service_healthy
 
+  telegram-service:
+    build:
+      context: .
+      dockerfile: telegram-service/Dockerfile
+    container_name: telegram_microservice
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable
+      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@${RABBITMQ_HOST}:${RABBITMQ_PORT}/
+      - PORT=8081
+      - WEBHOOK_DOMAIN=${WEBHOOK_DOMAIN:-}
+    networks:
+      - chat-network
+    ports:
+      - "8083:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
 networks:
   chat-network:
     driver: bridge

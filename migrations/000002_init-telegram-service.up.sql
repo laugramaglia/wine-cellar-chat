@@ -1,0 +1,11 @@
+CREATE SCHEMA IF NOT EXISTS telegram;
+SET search_path TO telegram;
+
+CREATE TABLE IF NOT EXISTS bot_config (
+    id SERIAL PRIMARY KEY,
+    bot_token VARCHAR(255) NOT NULL,
+    webhook_url VARCHAR(1024),
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
