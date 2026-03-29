@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"log"
 
-	"chat-service/model"
+	"github.com/testament117/KrakenD-chat/pkg/model"
 	"chat-service/service"
 
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -124,7 +124,7 @@ func (h *RabbitMQHandler) handleMessage(d amqp.Delivery) {
 		return
 	}
 
-	log.Printf("Received message: Sender=%v, Recipient=%v", msg.SenderID, msg.Recipient)
+	log.Printf("Received message: Sender=%v, Conversation=%v", msg.SenderID, msg.ConversationID)
 
 	err := h.service.ProcessIncomingMessage(&msg)
 	if err != nil {

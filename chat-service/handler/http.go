@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"chat-service/model"
+	"github.com/testament117/KrakenD-chat/pkg/model"
 	"chat-service/service"
 
 	"github.com/go-chi/chi/v5"

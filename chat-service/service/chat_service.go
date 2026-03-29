@@ -1,7 +1,7 @@
 package service
 
 import (
-	"chat-service/model"
+	"github.com/testament117/KrakenD-chat/pkg/model"
 	"chat-service/repository"
 )
 

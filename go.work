@@ -1,6 +1,8 @@
-go 1.24.1
+go 1.24.0
 
 use (
 	./chat-service
 	./pkg/health
+	./pkg/model
+	./telegram-service
 )

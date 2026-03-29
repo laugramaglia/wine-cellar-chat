@@ -22,11 +22,11 @@ COPY pkg/model/ pkg/model/
 COPY telegram-service/ telegram-service/
 
 # Build the application
-RUN cd chat-service && CGO_ENABLED=0 GOOS=linux go build -o /chat-service ./cmd/main.go
+RUN cd telegram-service && CGO_ENABLED=0 GOOS=linux go build -o /telegram-service ./cmd/main.go
 
 FROM alpine:latest
 WORKDIR /app
-COPY --from=builder /chat-service .
+COPY --from=builder /telegram-service .
 # Ensure permissions
-RUN chmod +x ./chat-service
-CMD ["./chat-service"]
+RUN chmod +x ./telegram-service
+CMD ["./telegram-service"]

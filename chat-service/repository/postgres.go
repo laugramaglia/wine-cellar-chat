@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"chat-service/model"
+	"github.com/testament117/KrakenD-chat/pkg/model"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -74,19 +74,27 @@ func (r *PostgresRepository) SaveMessage(msg *model.Message) error {
 	}
 }
 
-func (r *PostgresRepository) GetMessages(userID int, limit int, offset int) ([]*model.Message, error) {
-	query := "SELECT id, sender_id, recipient_id, message_content, created_at FROM get_user_messages($1, $2, $3)"
-	rows, err := r.pool.Query(context.Background(), query, userID, limit, offset)
+func (r *PostgresRepository) GetMessages(conversationID int64, limit int, offset int) ([]*model.Message, error) {
+	query := "SELECT message_id, sender_id, conversation_id, message_type, message_content, media_url, sent_at, status FROM get_conversation_messages($1, $2, $3)"
+	rows, err := r.pool.Query(context.Background(), query, conversationID, limit, offset)
 	if err != nil {
-		return nil, fmt.Errorf("failed to execute get_user_messages: %w", err)
+		return nil, fmt.Errorf("failed to execute get_conversation_messages: %w", err)
 	}
 	defer rows.Close()
 
 	var messages []*model.Message
 	for rows.Next() {
 		var msg model.Message
-		if err := rows.Scan(&msg.ID, &msg.SenderID, &msg.Recipient, &msg.Content, &msg.CreatedAt); err != nil {
+		var mediaURL *string
+		var content *string
+		if err := rows.Scan(&msg.MessageID, &msg.SenderID, &msg.ConversationID, &msg.MessageType, &content, &mediaURL, &msg.SentAt, &msg.Status); err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+		if content != nil {
+			msg.MessageContent = *content
+		}
+		if mediaURL != nil {
+			msg.MediaURL = *mediaURL
 		}
 		messages = append(messages, &msg)
 	}
@@ -126,19 +134,25 @@ func (r *PostgresRepository) flushBatch(batch []*model.Message) {
 		return
 	}
 
-	var senders []int
-	var recipients []int
+	var senders []int64
+	var conversations []int64
+	var messageTypes []string
 	var contents []string
+	var mediaUrls []string
+	var statuses []string
 
 	for _, msg := range batch {
 		senders = append(senders, msg.SenderID)
-		recipients = append(recipients, msg.Recipient)
-		contents = append(contents, msg.Content)
+		conversations = append(conversations, msg.ConversationID)
+		messageTypes = append(messageTypes, string(msg.MessageType))
+		contents = append(contents, msg.MessageContent)
+		mediaUrls = append(mediaUrls, msg.MediaURL)
+		statuses = append(statuses, string(msg.Status))
 	}
 
-	query := "CALL bulk_insert_messages($1::INT[], $2::INT[], $3::TEXT[])"
+	query := "CALL bulk_insert_messages($1::BIGINT[], $2::BIGINT[], $3::TEXT[], $4::TEXT[], $5::TEXT[], $6::TEXT[])"
 
-	_, err := r.pool.Exec(context.Background(), query, senders, recipients, contents)
+	_, err := r.pool.Exec(context.Background(), query, senders, conversations, messageTypes, contents, mediaUrls, statuses)
 	if err != nil {
 		log.Printf("Failed to bulk insert batch of %d messages: %v", len(batch), err)
 		return
