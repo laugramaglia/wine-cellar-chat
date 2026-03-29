@@ -94,18 +94,3 @@ migrate-drop:
 		-database "$(DB_URL)" \
 		drop -f
 	@echo "Database dropped"
-
-# Swagger / OpenAPI Commands
-swagger-up:
-	@echo "Generating OpenAPI spec and starting Swagger UI..."
-	@docker compose up --force-recreate docs-generator && docker compose up -d swagger-ui
-	@echo "Swagger UI available at: http://localhost:8081"
-
-swagger-regenerate:
-	@echo "Regenerating OpenAPI spec..."
-	@docker compose rm -f docs-generator swagger-ui
-	@docker compose up --force-recreate docs-generator && docker compose up -d swagger-ui
-	@echo "Swagger UI available at: http://localhost:8081"
-
-swagger-open:
-	@open http://localhost:8081
