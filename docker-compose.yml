@@ -20,7 +20,7 @@ services:
     healthcheck:
       # Use wget as curl is missing in KrakenD image
       test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/__health"]
-      interval: 10s
+      interval: 30s
       timeout: 5s
       retries: 3
       start_period: 5s
@@ -45,7 +45,7 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080"]
-      interval: 10s
+      interval: 30s
       timeout: 5s
       retries: 3
       start_period: 5s
@@ -63,7 +63,7 @@ services:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 5s
+      interval: 30s
       timeout: 5s
       retries: 5
 
@@ -80,7 +80,7 @@ services:
       - chat-network
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
-      interval: 5s
+      interval: 30s
       timeout: 5s
       retries: 5
 
@@ -132,7 +132,7 @@ services:
       - chat-network
     healthcheck:
       test: ["CMD", "./chat-service", "--healthcheck"]
-      interval: 10s
+      interval: 30s
       timeout: 5s
       retries: 3
       start_period: 5s
@@ -161,6 +161,12 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "./telegram-service", "--healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
 
 networks:
   chat-network:

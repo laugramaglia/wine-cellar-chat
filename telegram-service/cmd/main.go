@@ -2,7 +2,7 @@
 // @title Telegram Service
 // @version 1.0
 // @description API for Telegram bot management
-// @host localhost:8081
+// @host localhost:8080
 // @BasePath /
 // @securityDefinitions.apikey BearerAuth
 // @in header
@@ -11,6 +11,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -22,12 +23,22 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
+	"github.com/laugramaglia/wine-cellar-chat/pkg/model"
 	"telegram-service/handler"
 	"telegram-service/repository"
 	"telegram-service/service"
+	"github.com/laugramaglia/wine-cellar-chat/pkg/health"
 )
 
 func main() {
+	healthCheck := flag.Bool("healthcheck", false, "run health check")
+	port := flag.String("port", "8081", "port for the service")
+	flag.Parse()
+
+	if *healthCheck {
+		health.Check(*port)
+	}
+
 	// 1. Get Environment Variables
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
@@ -39,9 +50,8 @@ func main() {
 		log.Fatal("RABBITMQ_URL must be set")
 	}
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8081"
+	if os.Getenv("PORT") != "" {
+		*port = os.Getenv("PORT")
 	}
 
 	webhookDomain := os.Getenv("WEBHOOK_DOMAIN")
@@ -71,7 +81,8 @@ func main() {
 	}
 
 	// 5. Initialize Telegram Handler
-	telegramHandler := handler.NewTelegramHandler(telegramService)
+	logger := model.NewDefaultLogger(os.Stdout)
+	telegramHandler := handler.NewTelegramHandler(telegramService, logger)
 
 	// 6. Initialize HTTP Router for Webhooks
 	r := chi.NewRouter()
@@ -102,12 +113,12 @@ func main() {
 
 	// 6. Start HTTP Server
 	srv := &http.Server{
-		Addr:    ":" + port,
+		Addr:    ":" + *port,
 		Handler: r,
 	}
 
 	go func() {
-		log.Printf("Starting HTTP server on port %s", port)
+		log.Printf("Starting HTTP server on port %s", *port)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("Server error: %v", err)
 		}

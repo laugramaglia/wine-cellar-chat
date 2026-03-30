@@ -11,11 +11,13 @@ import (
 
 type TelegramHandler struct {
 	telegramService *service.TelegramService
+	logger          model.Logger
 }
 
-func NewTelegramHandler(telegramService *service.TelegramService) *TelegramHandler {
+func NewTelegramHandler(telegramService *service.TelegramService, logger model.Logger) *TelegramHandler {
 	return &TelegramHandler{
 		telegramService: telegramService,
+		logger:          logger,
 	}
 }
 
@@ -35,23 +37,24 @@ type ConfigureBotRequest struct {
 // @Failure 500 {object} model.ApiError
 // @Router /api/v1/telegram/config [post]
 func (h *TelegramHandler) ConfigureBot(w http.ResponseWriter, r *http.Request) {
+	rw := model.NewResponseWriter(w, h.logger)
 	var req ConfigureBotRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		model.SendError(w, http.StatusBadRequest, model.ErrorStatusInvalidArgument, "Invalid request body", nil)
+		rw.SendErrorWithStatus(http.StatusBadRequest, model.ErrorStatusInvalidArgument, "Invalid request body", nil)
 		return
 	}
 
 	if req.BotToken == "" {
-		model.SendError(w, http.StatusBadRequest, model.ErrorStatusInvalidArgument, "bot_token is required", model.BadRequestErrorDetail("bot_token", "bot_token is required"))
+		rw.SendErrorWithStatus(http.StatusBadRequest, model.ErrorStatusInvalidArgument, "bot_token is required", []model.ErrorDetail{model.NewErrorDetail("bot_token", "bot_token is required")})
 		return
 	}
 
 	if err := h.telegramService.ConfigureBot(r.Context(), req.BotToken, req.WebhookDomain); err != nil {
-		model.SendError(w, http.StatusInternalServerError, model.ErrorStatusInternal, err.Error(), nil)
+		rw.SendError(err)
 		return
 	}
 
-	model.SendSuccess(w, map[string]string{
+	rw.SendSuccessWithCode(http.StatusOK, map[string]string{
 		"message": "bot configured successfully",
 	})
 }
@@ -64,13 +67,14 @@ func (h *TelegramHandler) ConfigureBot(w http.ResponseWriter, r *http.Request) {
 // @Failure 500 {object} model.ApiError
 // @Router /api/v1/telegram/webhook [get]
 func (h *TelegramHandler) GetWebhookInfo(w http.ResponseWriter, r *http.Request) {
+	rw := model.NewResponseWriter(w, h.logger)
 	info, err := h.telegramService.GetWebhookInfo(r.Context())
 	if err != nil {
-		model.SendError(w, http.StatusInternalServerError, model.ErrorStatusInternal, err.Error(), nil)
+		rw.SendError(err)
 		return
 	}
 
-	model.SendSuccess(w, info)
+	rw.SendSuccessWithCode(http.StatusOK, info)
 }
 
 // @Summary Delete webhook
@@ -81,12 +85,13 @@ func (h *TelegramHandler) GetWebhookInfo(w http.ResponseWriter, r *http.Request)
 // @Failure 500 {object} model.ApiError
 // @Router /api/v1/telegram/webhook [delete]
 func (h *TelegramHandler) DeleteWebhook(w http.ResponseWriter, r *http.Request) {
+	rw := model.NewResponseWriter(w, h.logger)
 	if err := h.telegramService.DeleteWebhook(r.Context()); err != nil {
-		model.SendError(w, http.StatusInternalServerError, model.ErrorStatusInternal, err.Error(), nil)
+		rw.SendError(err)
 		return
 	}
 
-	model.SendSuccess(w, map[string]string{
+	rw.SendSuccessWithCode(http.StatusOK, map[string]string{
 		"message": "webhook deleted successfully",
 	})
 }

@@ -44,12 +44,18 @@
       "endpoint": "/api/v1/telegram/config",
       "method": "POST",
       "output_encoding": "json",
+      "extra_config": {},
       "backend": [
         {
           "host": ["http://telegram_microservice:8081"],
           "url_pattern": "/api/v1/telegram/config",
           "method": "POST",
-          "encoding": "json"
+          "encoding": "json",
+          "extra_config": {
+            "qos/http-status-validator": {
+              "allowed_statuses": [200, 201, 204, 400, 401, 403, 404, 500]
+            }
+          }
         }
       ]
     },
@@ -57,12 +63,18 @@
       "endpoint": "/api/v1/telegram/webhook",
       "method": "GET",
       "output_encoding": "json",
+      "extra_config": {},
       "backend": [
         {
           "host": ["http://telegram_microservice:8081"],
           "url_pattern": "/api/v1/telegram/webhook",
           "method": "GET",
-          "encoding": "json"
+          "encoding": "json",
+          "extra_config": {
+            "qos/http-status-validator": {
+              "allowed_statuses": [200, 201, 204, 400, 401, 403, 404, 500]
+            }
+          }
         }
       ]
     },
@@ -70,12 +82,18 @@
       "endpoint": "/api/v1/telegram/webhook",
       "method": "DELETE",
       "output_encoding": "json",
+      "extra_config": {},
       "backend": [
         {
           "host": ["http://telegram_microservice:8081"],
           "url_pattern": "/api/v1/telegram/webhook",
           "method": "DELETE",
-          "encoding": "json"
+          "encoding": "json",
+          "extra_config": {
+            "qos/http-status-validator": {
+              "allowed_statuses": [200, 201, 204, 400, 401, 403, 404, 500]
+            }
+          }
         }
       ]
     }

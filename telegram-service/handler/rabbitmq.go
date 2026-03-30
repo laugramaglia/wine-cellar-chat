@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/testament117/KrakenD-chat/pkg/model"
+	"github.com/laugramaglia/wine-cellar-chat/pkg/model"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )

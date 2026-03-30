@@ -8,10 +8,23 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/testament117/KrakenD-chat/pkg/model"
 	"telegram-service/repository"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/laugramaglia/wine-cellar-chat/pkg/model"
+)
+ 
+var (
+	ErrBotNotInitialized = &model.APIError{
+		Code:    http.StatusBadRequest,
+		Status:  string(model.ErrorStatusInvalidArgument),
+		Message: "bot not initialized",
+	}
+	ErrInvalidToken = &model.APIError{
+		Code:    http.StatusBadRequest,
+		Status:  string(model.ErrorStatusInvalidArgument),
+		Message: "invalid bot token",
+	}
 )
 
 // MessagePublisher defines an interface for publishing messages to a message queue (e.g., RabbitMQ).
@@ -138,7 +151,7 @@ func (s *TelegramService) ConfigureBot(ctx context.Context, botToken, webhookDom
 
 	bot, err := tgbotapi.NewBotAPI(botToken)
 	if err != nil {
-		return fmt.Errorf("failed to initialize telegram bot api: %w", err)
+		return fmt.Errorf("%w: %v", ErrInvalidToken, err)
 	}
 
 	bot.Debug = false
@@ -176,7 +189,7 @@ func (s *TelegramService) ConfigureBot(ctx context.Context, botToken, webhookDom
 // the bot is not initialized or the Telegram API request fails.
 func (s *TelegramService) GetWebhookInfo(ctx context.Context) (WebhookInfo, error) {
 	if s.bot == nil {
-		return WebhookInfo{}, fmt.Errorf("bot not initialized")
+		return WebhookInfo{}, ErrBotNotInitialized
 	}
 
 	info, err := s.bot.GetWebhookInfo()
@@ -206,7 +219,7 @@ func (s *TelegramService) GetWebhookInfo(ctx context.Context) (WebhookInfo, erro
 // or if the database update fails.
 func (s *TelegramService) DeleteWebhook(ctx context.Context) error {
 	if s.bot == nil {
-		return fmt.Errorf("bot not initialized")
+		return ErrBotNotInitialized
 	}
 
 	if err := s.repo.UpdateWebhookURL(ctx, ""); err != nil {
