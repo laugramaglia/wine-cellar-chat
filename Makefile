@@ -34,7 +34,7 @@ help:
 	@echo ""
 
 
-// make migrate-create NAME=
+# make migrate-create NAME=
 migrate-create:
 	@if [ -z "$(NAME)" ]; then \
 		echo "Error: NAME is required. Usage: make migrate-create NAME=your_migration_name"; \
