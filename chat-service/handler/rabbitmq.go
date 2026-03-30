@@ -5,7 +5,8 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/testament117/KrakenD-chat/pkg/model"
+	"github.com/laugramaglia/wine-cellar-chat/pkg/model"
+
 	"chat-service/service"
 
 	amqp "github.com/rabbitmq/amqp091-go"

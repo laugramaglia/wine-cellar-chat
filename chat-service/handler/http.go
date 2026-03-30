@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/testament117/KrakenD-chat/pkg/model"
 	"chat-service/service"
+
+	"github.com/laugramaglia/wine-cellar-chat/pkg/model"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -26,6 +27,16 @@ func (h *HTTPHandler) Routes() chi.Router {
 	return r
 }
 
+// @Summary Create message
+// @Description Create a new chat message
+// @Tags messages
+// @Accept json
+// @Produce json
+// @Param message body model.Message true "Message data"
+// @Success 200 {object} map[string]bool
+// @Failure 400 {object} model.ApiError
+// @Failure 500 {object} model.ApiError
+// @Router /api/v1/messages [post]
 func (h *HTTPHandler) CreateMessage(w http.ResponseWriter, r *http.Request) {
 	var msg model.Message
 	if err := json.NewDecoder(r.Body).Decode(&msg); err != nil {

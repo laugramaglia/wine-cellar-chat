@@ -1,3 +1,12 @@
+// Package main Chat Service API
+// @title Chat Service
+// @version 1.0
+// @description API for chat messaging
+// @host localhost:8080
+// @BasePath /
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 package main
 
 import (
@@ -15,7 +24,7 @@ import (
 	"chat-service/repository"
 	"chat-service/service"
 
-	"wine-cellar-chat/pkg/health"
+	"github.com/laugramaglia/wine-cellar-chat/pkg/health"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"

@@ -1,3 +1,12 @@
+// Package main Telegram Service API
+// @title Telegram Service
+// @version 1.0
+// @description API for Telegram bot management
+// @host localhost:8081
+// @BasePath /
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 package main
 
 import (
@@ -61,7 +70,10 @@ func main() {
 		log.Printf("Warning: Failed to initialize telegram service initially: %v. The service will continue running, but will not process Telegram messages until configured.", err)
 	}
 
-	// 5. Initialize HTTP Router for Webhooks
+	// 5. Initialize Telegram Handler
+	telegramHandler := handler.NewTelegramHandler(telegramService)
+
+	// 6. Initialize HTTP Router for Webhooks
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
@@ -70,6 +82,13 @@ func main() {
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("OK"))
+	})
+
+	// Telegram Configuration API
+	r.Route("/api/v1/telegram", func(r chi.Router) {
+		r.Post("/config", telegramHandler.ConfigureBot)
+		r.Get("/webhook", telegramHandler.GetWebhookInfo)
+		r.Delete("/webhook", telegramHandler.DeleteWebhook)
 	})
 
 	// Webhook endpoint (if token exists)

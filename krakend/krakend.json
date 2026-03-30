@@ -33,11 +33,48 @@
       },
       "backend": [
         {
-          "host": [
-            "http://chat_microservice:8080"
-          ],
+          "host": ["http://chat_microservice:8080"],
           "url_pattern": "/api/v1/messages",
           "method": "POST",
+          "encoding": "json"
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/telegram/config",
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "host": ["http://telegram_microservice:8081"],
+          "url_pattern": "/api/v1/telegram/config",
+          "method": "POST",
+          "encoding": "json"
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/telegram/webhook",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "host": ["http://telegram_microservice:8081"],
+          "url_pattern": "/api/v1/telegram/webhook",
+          "method": "GET",
+          "encoding": "json"
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/telegram/webhook",
+      "method": "DELETE",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "host": ["http://telegram_microservice:8081"],
+          "url_pattern": "/api/v1/telegram/webhook",
+          "method": "DELETE",
           "encoding": "json"
         }
       ]
@@ -57,9 +94,7 @@
       "auto_options": true
     },
     "security/cors": {
-      "allow_origins": [
-        "*"
-      ],
+      "allow_origins": ["*"],
       "allow_methods": [
         "GET",
         "HEAD",
@@ -69,16 +104,8 @@
         "DELETE",
         "OPTIONS"
       ],
-      "allow_headers": [
-        "Origin",
-        "Authorization",
-        "Content-Type",
-        "Accept"
-      ],
-      "expose_headers": [
-        "Content-Length",
-        "Content-Type"
-      ],
+      "allow_headers": ["Origin", "Authorization", "Content-Type", "Accept"],
+      "expose_headers": ["Content-Length", "Content-Type"],
       "max_age": "12h"
     }
   }

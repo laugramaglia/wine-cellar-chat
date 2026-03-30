@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/testament117/KrakenD-chat/pkg/model"
+	"github.com/laugramaglia/wine-cellar-chat/pkg/model"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )

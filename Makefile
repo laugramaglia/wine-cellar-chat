@@ -13,7 +13,10 @@ DB_URL=postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTG
 # Docker Compose migration service
 MIGRATE_SERVICE=migrate
 
-.PHONY: help migrate-up migrate-down migrate-create migrate-force migrate-version migrate-drop migrate-goto ssh-server swagger-up swagger-regenerate swagger-open
+# Services to generate Swagger docs for
+SERVICES = chat-service telegram-service
+
+.PHONY: help migrate-up migrate-down migrate-create migrate-force migrate-version migrate-drop migrate-goto ssh-server swagger-up swagger-regenerate swagger-open docs-swag
 
 help:
 	@echo "Database Migration Commands:"
@@ -25,6 +28,9 @@ help:
 	@echo "  make migrate-force VERSION=N                - Force set migration version"
 	@echo "  make migrate-goto VERSION=N                 - Migrate to specific version"
 	@echo "  make migrate-drop                           - Drop everything (USE WITH CAUTION)"
+	@echo ""
+	@echo "Documentation Commands:"
+	@echo "  make docs-swag                              - Generate Swagger docs for all services"
 	@echo ""
 
 
@@ -94,3 +100,13 @@ migrate-drop:
 		-database "$(DB_URL)" \
 		drop -f
 	@echo "Database dropped"
+
+docs-swag:
+	@echo "Generating Swagger docs..."
+	@for service in $(SERVICES); do \
+		echo "Generating docs for $$service..."; \
+		cd $$service && go run github.com/swaggo/swag/cmd/swag@v1.8.12 init -g cmd/main.go -o docs --parseDependency --parseInternal; \
+		cd ..; \
+		echo "Docs for $$service generated successfully"; \
+	done
+	@echo "All Swagger docs generated successfully"

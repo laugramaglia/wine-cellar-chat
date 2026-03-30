@@ -25,43 +25,23 @@ services:
       retries: 3
       start_period: 5s
 
-  # OpenAPI Generator - Generate OpenAPI spec from KrakenD config
-  docs-generator:
-    build:
-      context: ./docs-generator
-      dockerfile: Dockerfile
-    container_name: docs_generator
-    volumes:
-      - krakend_config:/etc/krakend:rw
-    networks:
-      - chat-network
-    restart: "no"
-    healthcheck:
-      test: ["CMD", "/docs-generator", "--healthcheck"]
-      interval: 5s
-      timeout: 3s
-      retries: 3
-      start_period: 2s
-
   swagger-ui:
     image: swaggerapi/swagger-ui
     container_name: swagger_ui
     ports:
       - "8081:8080"
     environment:
-      SWAGGER_JSON: /usr/share/nginx/html/specs/openapi.json
-      LAYOUT: "BaseLayout"
+      CONFIG_URL: /usr/share/nginx/html/swagger-config.json
+      LAYOUT: "StandaloneLayout"
       FILTER: "false"
       SHOW_EXTENSIONS: "false"
       SHOW_COMMON_EXTENSIONS: "false"
       DOC_EXPANSION: "list"
     volumes:
-      - krakend_config:/usr/share/nginx/html/specs:ro
+      - ./chat-service/docs/swagger.json:/usr/share/nginx/html/specs/chat.json:ro
+      - ./telegram-service/docs/swagger.json:/usr/share/nginx/html/specs/telegram.json:ro
     networks:
       - chat-network
-    depends_on:
-      docs-generator:
-        condition: service_completed_successfully
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080"]
@@ -103,7 +83,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
 
   # Database Migrations - Run before services start
   # In production, expects external PostgreSQL (AWS RDS, Azure Database, etc.)
@@ -192,6 +171,6 @@ volumes:
   krakend_config:
     driver: local
     driver_opts:
-      type: 'none'
-      o: 'bind'
+      type: "none"
+      o: "bind"
       device: "${PWD}/krakend"

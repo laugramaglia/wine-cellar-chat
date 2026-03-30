@@ -1,3 +1,3 @@
-module wine-cellar-chat/pkg/health
+module github.com/laugramaglia/wine-cellar-chat/pkg/health
 
-go 1.24.1
+go 1.25.8
