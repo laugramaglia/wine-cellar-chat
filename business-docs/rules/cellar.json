@@ -1,0 +1,119 @@
+{
+  "_source": "business-docs/wiki/features/cellar",
+  "derived_by": "business-rules-keeper",
+  "feature": "cellar",
+  "updated": "2026-08-29",
+  "rules": [
+    {
+      "id": "cellar-add-may-upsert-wine",
+      "statement": "cellar_add accepts inline wine fields, which upsert the wine first.",
+      "value": null,
+      "page": "index",
+      "code_refs": ["README.md:179"],
+      "adrs": ["0007"],
+      "status": "aspirational"
+    },
+    {
+      "id": "cellar-caller-from-props",
+      "statement": "No cellar tool takes a user_id; the owner comes from props.",
+      "value": null,
+      "page": "index",
+      "code_refs": ["README.md:155", "README.md:336"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "cellar-engine-source-requires-both",
+      "statement": "For source: \"cellar\" the engine requires both quantity > 0 and status = in_cellar.",
+      "value": "two conditions, AND",
+      "page": "index",
+      "code_refs": ["README.md:285"],
+      "adrs": ["0004"],
+      "status": "aspirational"
+    },
+    {
+      "id": "cellar-guest-no-cellar",
+      "statement": "guest holds neither cellar permission, no reads, no mutations.",
+      "value": null,
+      "page": "index",
+      "code_refs": ["README.md:108"],
+      "adrs": ["0010"],
+      "status": "aspirational"
+    },
+    {
+      "id": "cellar-hard-delete-drops-items",
+      "statement": "user_delete with hard: true drops that user's cellar items.",
+      "value": null,
+      "page": "index",
+      "code_refs": ["README.md:221"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "cellar-item-is-per-user",
+      "statement": "A cellar item belongs to exactly one user and references one wine.",
+      "value": "cellar_items.user_id, .wine_id",
+      "page": "index",
+      "code_refs": ["README.md:76"],
+      "adrs": ["0008"],
+      "status": "aspirational"
+    },
+    {
+      "id": "cellar-last-bottle-auto-drunk",
+      "statement": "Drinking the last bottle sets status = drunk automatically.",
+      "value": null,
+      "page": "index",
+      "code_refs": ["README.md:184"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "cellar-list-filters",
+      "statement": "cellar_list filters on wine_type, region, ready_to_drink, drink_soon.",
+      "value": ["wine_type", "region", "ready_to_drink", "drink_soon"],
+      "page": "index",
+      "code_refs": ["README.md:186", "README.md:187"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "cellar-list-sort",
+      "statement": "sort accepts four keys.",
+      "value": ["drink_until", "purchase_date", "price", "name"],
+      "page": "index",
+      "code_refs": ["README.md:188"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "cellar-review-consume-decrements",
+      "statement": "review_write with consume: true decrements the cellar.",
+      "value": null,
+      "page": "index",
+      "code_refs": ["README.md:193"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "cellar-status-enum",
+      "statement": "An item's status is one of three values.",
+      "value": ["in_cellar", "drunk", "gifted"],
+      "page": "index",
+      "code_refs": ["README.md:78"],
+      "adrs": ["0008"],
+      "status": "aspirational"
+    },
+    {
+      "id": "cellar-write-permission",
+      "statement": "cellar_add and cellar_update require cellar:write; cellar_list requires cellar:read.",
+      "value": "cellar:write / cellar:read",
+      "page": "index",
+      "code_refs": ["README.md:120", "README.md:121"],
+      "adrs": ["0010"],
+      "status": "aspirational"
+    }
+  ],
+  "enums": {
+    "cellar_item_status": ["in_cellar", "drunk", "gifted"]
+  }
+}

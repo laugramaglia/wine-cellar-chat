@@ -1,0 +1,168 @@
+{
+  "_source": "business-docs/wiki/features/wine-catalog",
+  "derived_by": "business-rules-keeper",
+  "feature": "wine-catalog",
+  "updated": "2026-08-29",
+  "rules": [
+    {
+      "id": "wine-catalogue-is-shared",
+      "statement": "One catalogue, visible and writable by every user. It is not per-account.",
+      "value": "shared",
+      "page": "index",
+      "code_refs": ["README.md:47"],
+      "adrs": ["0008"],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-get-composition",
+      "statement": "wine_get returns the wine, the caller's cellar holdings, the caller's reviews, and the aggregate rating across all users.",
+      "value": "4 parts",
+      "page": "index",
+      "code_refs": ["README.md:174"],
+      "adrs": ["0008"],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-identity-key",
+      "statement": "A bottling is identified by producer, name and vintage, case-insensitively on the two strings.",
+      "value": "UNIQUE (lower(producer), lower(name), vintage)",
+      "page": "index",
+      "code_refs": ["README.md:74"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-name-required",
+      "statement": "name is the only required field on a wine. Everything else is optional.",
+      "value": "name",
+      "page": "index",
+      "code_refs": ["README.md:91"],
+      "adrs": ["0006"],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-read-permission",
+      "statement": "wine_search and wine_get require catalog:read, held by admin, member and guest.",
+      "value": "catalog:read",
+      "page": "index",
+      "code_refs": ["README.md:118"],
+      "adrs": ["0010"],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-search-free-text-fields",
+      "statement": "query is free text over name, producer, region and notes.",
+      "value": ["name", "producer", "region", "notes"],
+      "page": "index",
+      "code_refs": ["README.md:169"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-search-limit-default",
+      "statement": "wine_search returns 10 results when limit is not given.",
+      "value": 10,
+      "page": "index",
+      "code_refs": ["README.md:171"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-search-limit-max",
+      "statement": "limit is capped at 50.",
+      "value": 50,
+      "page": "index",
+      "code_refs": ["README.md:171"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-search-per-caller-ownership",
+      "statement": "Each search result carries an owned flag and a quantity for the calling user.",
+      "value": ["owned", "quantity"],
+      "page": "index",
+      "code_refs": ["README.md:172"],
+      "adrs": ["0008"],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-server-takes-no-images",
+      "statement": "The server accepts structured fields only; image upload or storage of any kind is out of scope.",
+      "value": "none",
+      "page": "index",
+      "code_refs": ["README.md:30", "README.md:38"],
+      "adrs": ["0009"],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-survives-user-deletion",
+      "statement": "Wines contributed by a deleted user stay in the shared catalogue.",
+      "value": "retained",
+      "page": "index",
+      "code_refs": ["README.md:222"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-upsert-fills-blanks",
+      "statement": "wine_upsert writes a field only where the stored value is null.",
+      "value": "fill-only",
+      "page": "index",
+      "code_refs": ["README.md:163"],
+      "adrs": ["0007"],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-upsert-overwrite-flag",
+      "statement": "A non-null field is replaced only when the caller passes overwrite: true.",
+      "value": "overwrite: true",
+      "page": "index",
+      "code_refs": ["README.md:164"],
+      "adrs": ["0007"],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-upsert-reports-change",
+      "statement": "The result reports whether the row was created and which fields the call filled.",
+      "value": "created: bool, fields_filled: string[]",
+      "page": "index",
+      "code_refs": ["README.md:166"],
+      "adrs": ["0007"],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-upsert-target-by-id",
+      "statement": "With wine_id, the upsert targets that row; without it, it matches on (producer, name, vintage).",
+      "value": "wine_id else match",
+      "page": "index",
+      "code_refs": ["README.md:161"],
+      "adrs": ["0007"],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-vintage-nullable",
+      "statement": "vintage is nullable; null means non-vintage (NV).",
+      "value": "null = NV",
+      "page": "index",
+      "code_refs": ["README.md:70"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-write-permission",
+      "statement": "wine_upsert requires catalog:write, admin and member only; a guest cannot write.",
+      "value": "catalog:write",
+      "page": "index",
+      "code_refs": ["README.md:119"],
+      "adrs": ["0010"],
+      "status": "aspirational"
+    }
+  ],
+  "enums": {
+    "wine_type": ["red", "white", "rose", "sparkling", "orange", "dessert", "fortified"],
+    "sweetness": ["bone_dry", "dry", "off_dry", "medium_sweet", "sweet"],
+    "body": ["low", "medium_minus", "medium", "medium_plus", "high"],
+    "tannin": ["low", "medium_minus", "medium", "medium_plus", "high"],
+    "acidity": ["low", "medium_minus", "medium", "medium_plus", "high"]
+  }
+}

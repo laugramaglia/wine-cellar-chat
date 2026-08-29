@@ -1,0 +1,129 @@
+{
+  "_source": "business-docs/wiki/features/user-administration",
+  "derived_by": "business-rules-keeper",
+  "feature": "user-administration",
+  "updated": "2026-08-29",
+  "rules": [
+    {
+      "id": "admin-actions-audited",
+      "statement": "User created and role changed are written to audit_log.",
+      "value": "2 of 4 tools",
+      "page": "index",
+      "code_refs": ["README.md:345", "README.md:346", "README.md:347"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "admin-users-permission",
+      "statement": "All four account tools require one permission.",
+      "value": "admin:users",
+      "page": "index",
+      "code_refs": ["README.md:127"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "contributed-wines-survive",
+      "statement": "Wines the user contributed stay in the shared catalogue, at any delete depth.",
+      "value": "always kept",
+      "page": "index",
+      "code_refs": ["README.md:222"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "delete-is-soft-by-default",
+      "statement": "user_delete sets status = deleted and revokes the tokens.",
+      "value": "soft",
+      "page": "index",
+      "code_refs": ["README.md:220", "README.md:221"],
+      "adrs": ["0012"],
+      "status": "aspirational"
+    },
+    {
+      "id": "guard-last-active-admin",
+      "statement": "The last remaining active admin cannot be demoted, suspended, or deleted.",
+      "value": "reject when target is admin, status = active, and no other admin has status = active",
+      "page": "validations",
+      "code_refs": ["README.md:217", "README.md:218"],
+      "adrs": ["0013"],
+      "status": "aspirational"
+    },
+    {
+      "id": "guard-no-self-demote",
+      "statement": "An admin cannot demote themselves.",
+      "value": "reject when target_id == props.userId and role != 'admin'",
+      "page": "validations",
+      "code_refs": ["README.md:216", "README.md:217"],
+      "adrs": ["0013"],
+      "status": "aspirational"
+    },
+    {
+      "id": "guard-no-self-suspend",
+      "statement": "An admin cannot suspend themselves.",
+      "value": "reject when target_id == props.userId and status != 'active'",
+      "page": "validations",
+      "code_refs": ["README.md:216", "README.md:217"],
+      "adrs": ["0013"],
+      "status": "aspirational"
+    },
+    {
+      "id": "hard-delete-drops-owned-data",
+      "statement": "hard: true additionally drops the user's cellar items and reviews.",
+      "value": "hard: true",
+      "page": "index",
+      "code_refs": ["README.md:221"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "plaintext-token-returned-once",
+      "statement": "The plaintext token appears in the user_create response and nowhere, ever, again.",
+      "value": "exactly once",
+      "page": "index",
+      "code_refs": ["README.md:211"],
+      "adrs": ["0012"],
+      "status": "aspirational"
+    },
+    {
+      "id": "suspension-kills-tokens",
+      "statement": "Suspending a user makes every one of their tokens fail at the next request.",
+      "value": "next request",
+      "page": "index",
+      "code_refs": ["README.md:216", "README.md:413"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "user-create-default-role",
+      "statement": "role defaults when not supplied.",
+      "value": "member",
+      "page": "index",
+      "code_refs": ["README.md:208"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "user-create-issues-first-token",
+      "statement": "issue_token: true with a token_label creates the account and returns its first key in the same call.",
+      "value": "one call",
+      "page": "index",
+      "code_refs": ["README.md:208", "README.md:209", "README.md:210"],
+      "adrs": ["0012"],
+      "status": "aspirational"
+    },
+    {
+      "id": "user-update-fields",
+      "statement": "user_update changes role or status and nothing else.",
+      "value": ["role", "status"],
+      "page": "index",
+      "code_refs": ["README.md:215"],
+      "adrs": [],
+      "status": "aspirational"
+    }
+  ],
+  "enums": {
+    "role": ["admin", "member", "guest"],
+    "status": ["active", "suspended"]
+  }
+}

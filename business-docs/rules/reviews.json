@@ -1,0 +1,99 @@
+{
+  "_source": "business-docs/wiki/features/reviews",
+  "derived_by": "business-rules-keeper",
+  "feature": "reviews",
+  "updated": "2026-08-29",
+  "rules": [
+    {
+      "id": "review-consume-decrements-cellar",
+      "statement": "review_write with consume: true decrements the caller's cellar for that wine.",
+      "value": "consume: true",
+      "page": "index",
+      "code_refs": ["README.md:193"],
+      "adrs": ["0008"],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-feeds-personal-history",
+      "statement": "The caller's ratings feed the engine's personal-history component, weight 0.20, matched on wine, grape, region and producer.",
+      "value": 0.20,
+      "page": "index",
+      "code_refs": ["README.md:296"],
+      "adrs": ["0004", "0005"],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-list-filters",
+      "statement": "review_list filters on wine_id, min_rating, since, limit.",
+      "value": ["wine_id", "min_rating", "since", "limit"],
+      "page": "index",
+      "code_refs": ["README.md:195", "README.md:196"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-no-edit-or-delete",
+      "statement": "No review_update or review_delete tool exists. A review, once written, has no specified way back out.",
+      "value": "absent",
+      "page": "index",
+      "code_refs": ["README.md:190", "README.md:196"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-owner-is-the-caller",
+      "statement": "user_id is resolved from the bearer token, never from tool input. No review tool takes a user_id.",
+      "value": null,
+      "page": "index",
+      "code_refs": ["README.md:154", "README.md:156", "README.md:336", "README.md:338"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-rating-scale",
+      "statement": "Rating is on a 1-100 scale.",
+      "value": "1-100",
+      "page": "index",
+      "code_refs": ["README.md:80", "README.md:192"],
+      "adrs": ["0005"],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-read-permission",
+      "statement": "review_list requires review:read, which guest also holds.",
+      "value": "review:read",
+      "page": "index",
+      "code_refs": ["README.md:122"],
+      "adrs": ["0010"],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-row-shape",
+      "statement": "A review row is id, user_id, wine_id, rating, drank_on, occasion, body_text, would_buy_again, created_at.",
+      "value": ["id", "user_id", "wine_id", "rating", "drank_on", "occasion", "body_text", "would_buy_again", "created_at"],
+      "page": "index",
+      "code_refs": ["README.md:80", "README.md:81"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-write-permission",
+      "statement": "review_write requires review:write, admin and member only.",
+      "value": "review:write",
+      "page": "index",
+      "code_refs": ["README.md:123"],
+      "adrs": ["0010"],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-get-aggregate-is-global",
+      "statement": "wine_get returns an aggregate rating across all users, alongside the caller's own reviews.",
+      "value": "all users",
+      "page": "index",
+      "code_refs": ["README.md:174", "README.md:175"],
+      "adrs": ["0005"],
+      "status": "aspirational"
+    }
+  ],
+  "enums": {}
+}

@@ -1,0 +1,171 @@
+{
+  "_source": "business-docs/wiki/features/token-administration",
+  "derived_by": "business-rules-keeper",
+  "feature": "token-administration",
+  "updated": "2026-08-29",
+  "rules": [
+    {
+      "id": "admin-tokens-permission",
+      "statement": "All three tools require admin:tokens, which only admin holds.",
+      "value": "admin:tokens",
+      "page": "index",
+      "code_refs": ["README.md:128"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "delete-revokes-tokens",
+      "statement": "user_delete revokes that user's tokens as part of the soft-delete.",
+      "value": "cascade",
+      "page": "index",
+      "code_refs": ["README.md:220", "README.md:221"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "expiry-optional",
+      "statement": "expires_at is optional. A token created without one never expires.",
+      "value": "optional",
+      "page": "index",
+      "code_refs": ["README.md:61", "README.md:325"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "hash-only-storage",
+      "statement": "Only the SHA-256 hash is stored, as api_tokens.token_hash.",
+      "value": "SHA-256",
+      "page": "index",
+      "code_refs": ["README.md:60", "README.md:322"],
+      "adrs": ["0012"],
+      "status": "aspirational"
+    },
+    {
+      "id": "issuance-audited",
+      "statement": "\"token issued\" is written to audit_log.",
+      "value": "1 entry",
+      "page": "index",
+      "code_refs": ["README.md:345"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "list-never-returns-token",
+      "statement": "token_list never returns the token itself.",
+      "value": "never",
+      "page": "index",
+      "code_refs": ["README.md:230"],
+      "adrs": ["0012"],
+      "status": "aspirational"
+    },
+    {
+      "id": "list-prefix-limit",
+      "statement": "token_list never returns a recoverable prefix beyond the last 4 characters.",
+      "value": 4,
+      "page": "index",
+      "code_refs": ["README.md:230", "README.md:231"],
+      "adrs": ["0012"],
+      "status": "aspirational"
+    },
+    {
+      "id": "one-token-per-client",
+      "statement": "One token per client, distinguished by label (claude-desktop, gemini, phone), so revoking Gemini leaves Claude working.",
+      "value": "1 per client",
+      "page": "index",
+      "code_refs": ["README.md:62", "README.md:323", "README.md:324"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "plaintext-returned-once",
+      "statement": "token_create returns the plaintext token exactly once, at creation. It is never retrievable again, by anyone, including an admin.",
+      "value": "once",
+      "page": "index",
+      "code_refs": ["README.md:226", "README.md:227", "README.md:322"],
+      "adrs": ["0012"],
+      "status": "aspirational"
+    },
+    {
+      "id": "revocation-audited",
+      "statement": "\"token revoked\" is written to audit_log.",
+      "value": "1 entry",
+      "page": "index",
+      "code_refs": ["README.md:345"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "revoke-by-token-id",
+      "statement": "token_revoke takes a token id — not a user, not a label.",
+      "value": "token id",
+      "page": "index",
+      "code_refs": ["README.md:233"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "revoke-immediate",
+      "statement": "Revocation takes effect immediately.",
+      "value": "immediate",
+      "page": "index",
+      "code_refs": ["README.md:233"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "scopes-narrow-only",
+      "statement": "An explicit scopes array is a subset of the user's permissions. A token can only ever narrow what its user's role allows, never widen it.",
+      "value": "invariant",
+      "page": "index",
+      "code_refs": ["README.md:111", "README.md:112", "README.md:113", "README.md:114", "README.md:225", "README.md:325"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "scopes-nullable",
+      "statement": "scopes is nullable. null means inherit the user's role in full.",
+      "value": null,
+      "page": "index",
+      "code_refs": ["README.md:60", "README.md:63", "README.md:64"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "suspension-does-not-revoke",
+      "statement": "Suspending a user does not set revoked_at. The auth flow rejects on user.status instead, so reinstating the user silently restores every token.",
+      "value": "no revoke",
+      "page": "index",
+      "code_refs": ["README.md:144", "README.md:145", "README.md:216", "README.md:331"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "token-create-inputs",
+      "statement": "token_create takes user_id, label, optional scopes, optional expires_at.",
+      "value": ["user_id", "label", "scopes", "expires_at"],
+      "page": "index",
+      "code_refs": ["README.md:224", "README.md:225"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "token-format",
+      "statement": "32 bytes of crypto.getRandomValues, base64url, prefixed wc_ so it is greppable in logs.",
+      "value": "wc_ + 32B",
+      "page": "index",
+      "code_refs": ["README.md:321"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "tokens-never-logged",
+      "statement": "Tokens are never logged, in plaintext or hashed — including in audit_log.",
+      "value": "never",
+      "page": "index",
+      "code_refs": ["README.md:347"],
+      "adrs": ["0012"],
+      "status": "aspirational"
+    }
+  ],
+  "enums": {}
+}

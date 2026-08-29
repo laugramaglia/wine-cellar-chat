@@ -1,0 +1,8 @@
+{
+  "enabledPlugins": {
+    "business-wiki@local-plugs": true
+  },
+  "env": {
+    "CLAUDE_PLUGIN_OPTION_OPENAPI_PATH": ""
+  }
+}

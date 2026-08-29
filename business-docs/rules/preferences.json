@@ -1,0 +1,185 @@
+{
+  "_source": "business-docs/wiki/features/preferences",
+  "derived_by": "business-rules-keeper",
+  "feature": "preferences",
+  "updated": "2026-08-29",
+  "rules": [
+    {
+      "id": "avoid-is-a-hard-filter",
+      "statement": "Anything in prefs.avoid removes a wine from the result set entirely. It is not a penalty.",
+      "value": "hard filter",
+      "page": "index",
+      "code_refs": ["README.md:286"],
+      "adrs": ["0004"],
+      "status": "aspirational"
+    },
+    {
+      "id": "avoid-is-freeform",
+      "statement": "avoid is jsonb holding allergens and phrases such as \"no oak\", \"no sulfites added\".",
+      "value": "free-form list",
+      "page": "index",
+      "code_refs": ["README.md:68"],
+      "adrs": ["0004"],
+      "status": "aspirational"
+    },
+    {
+      "id": "budget-fit-weight",
+      "statement": "budget_min / budget_max feed budget fit, weighted 0.05; inside the band scores 1.0.",
+      "value": 0.05,
+      "page": "index",
+      "code_refs": ["README.md:298"],
+      "adrs": ["0005"],
+      "status": "aspirational"
+    },
+    {
+      "id": "dislikes-are-hard-filters",
+      "statement": "dislikes.grapes and dislikes.regions are hard filters.",
+      "value": "hard filter",
+      "page": "index",
+      "code_refs": ["README.md:287"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "likes-are-soft",
+      "statement": "likes feeds the Preference-match score component; it never filters.",
+      "value": 0.15,
+      "page": "index",
+      "code_refs": ["README.md:297"],
+      "adrs": ["0005"],
+      "status": "aspirational"
+    },
+    {
+      "id": "likes-dislikes-shape",
+      "statement": "likes and dislikes are jsonb of the shape { grapes: [], regions: [], styles: [] }.",
+      "value": "{grapes,regions,styles}",
+      "page": "index",
+      "code_refs": ["README.md:67"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "merge-is-the-default",
+      "statement": "prefs_set applies a partial update by merging into the existing row.",
+      "value": "merge",
+      "page": "index",
+      "code_refs": ["README.md:202"],
+      "adrs": ["0007"],
+      "status": "aspirational"
+    },
+    {
+      "id": "no-user-id-parameter",
+      "statement": "Neither prefs tool takes a user_id; the user comes from the bearer token via props. You cannot read or write another account's profile.",
+      "value": "token-resolved",
+      "page": "index",
+      "code_refs": ["README.md:154", "README.md:156", "README.md:336", "README.md:337"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "one-profile-per-user",
+      "statement": "user_prefs.user_id is the primary key. Exactly one profile per user; there is no second row to create.",
+      "value": "user_id (PK)",
+      "page": "index",
+      "code_refs": ["README.md:65"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "palate-fields-are-targets",
+      "statement": "sweetness / body / tannin / acidity are the user's target values on the same enums a wine carries, not filters.",
+      "value": "shared enums",
+      "page": "index",
+      "code_refs": ["README.md:66", "README.md:87", "README.md:88"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "palate-fit-weight",
+      "statement": "Palate fit, the four target fields vs the wine's, by distance on the 5-point scale, is weighted 0.25.",
+      "value": 0.25,
+      "page": "index",
+      "code_refs": ["README.md:295"],
+      "adrs": ["0005"],
+      "status": "aspirational"
+    },
+    {
+      "id": "prefs-fields",
+      "statement": "The stored profile is likes, dislikes, budget_min, budget_max, sweetness, body, tannin, acidity, avoid, notes, updated_at.",
+      "value": ["likes", "dislikes", "budget_min", "budget_max", "sweetness", "body", "tannin", "acidity", "avoid", "notes", "updated_at"],
+      "page": "index",
+      "code_refs": ["README.md:65", "README.md:66"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "prefs-read-permission",
+      "statement": "prefs_get requires prefs:read, held by admin, member and guest.",
+      "value": "all roles",
+      "page": "index",
+      "code_refs": ["README.md:124"],
+      "adrs": ["0010"],
+      "status": "aspirational"
+    },
+    {
+      "id": "prefs-write-permission",
+      "statement": "prefs_set requires prefs:write, held by admin and member. A guest cannot write prefs.",
+      "value": "not guest",
+      "page": "index",
+      "code_refs": ["README.md:125"],
+      "adrs": ["0010"],
+      "status": "aspirational"
+    },
+    {
+      "id": "profile-is-cross-client",
+      "statement": "The profile is keyed on the user, never on the token or the client, so every client of that user reads and writes the same row.",
+      "value": "user-keyed",
+      "page": "index",
+      "code_refs": ["README.md:6", "README.md:9", "README.md:203"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "replace-overwrites",
+      "statement": "replace: true on prefs_set overwrites the profile instead of merging.",
+      "value": "replace: true",
+      "page": "index",
+      "code_refs": ["README.md:202"],
+      "adrs": ["0007"],
+      "status": "aspirational"
+    },
+    {
+      "id": "request-beats-dislikes",
+      "statement": "A disliked grape or region is filtered out unless the request explicitly asks for it, then the request wins.",
+      "value": "request wins",
+      "page": "index",
+      "code_refs": ["README.md:287", "README.md:288"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "two-tokens-one-profile",
+      "statement": "Definition of done: two tokens for the same user, from two different clients, see one cellar and one prefs profile.",
+      "value": "acceptance test",
+      "page": "index",
+      "code_refs": ["README.md:402"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "use-prefs-default-true",
+      "statement": "wine_recommend applies the stored profile unless the caller passes use_prefs: false. Default true.",
+      "value": true,
+      "page": "index",
+      "code_refs": ["README.md:250"],
+      "adrs": [],
+      "status": "aspirational"
+    }
+  ],
+  "enums": {
+    "sweetness": ["bone_dry", "dry", "off_dry", "medium_sweet", "sweet"],
+    "body": ["low", "medium_minus", "medium", "medium_plus", "high"],
+    "tannin": ["low", "medium_minus", "medium", "medium_plus", "high"],
+    "acidity": ["low", "medium_minus", "medium", "medium_plus", "high"]
+  }
+}

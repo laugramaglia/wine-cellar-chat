@@ -1,0 +1,200 @@
+{
+  "_source": "business-docs/wiki/features/recommendation-engine",
+  "derived_by": "business-rules-keeper",
+  "feature": "recommendation-engine",
+  "updated": "2026-08-29",
+  "rules": [
+    {
+      "id": "at-least-one-reason",
+      "statement": "Every returned recommendation carries at least one non-empty reasons entry.",
+      "value": "len(reasons) >= 1",
+      "page": "index",
+      "code_refs": ["README.md:407"],
+      "adrs": ["0005"],
+      "status": "aspirational"
+    },
+    {
+      "id": "avoid-is-absolute",
+      "statement": "Anything in prefs.avoid is filtered out. No stated override.",
+      "value": "hard filter",
+      "page": "index",
+      "code_refs": ["README.md:286"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "budget-inside-band-is-one",
+      "statement": "A price inside the budget band scores 1.0, decaying outside it.",
+      "value": 1.0,
+      "page": "index",
+      "code_refs": ["README.md:298"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "component-range-0-1",
+      "statement": "Every scoring component yields a value in 0..1.",
+      "value": "0..1",
+      "page": "index",
+      "code_refs": ["README.md:290"],
+      "adrs": ["0004"],
+      "status": "aspirational"
+    },
+    {
+      "id": "deterministic-no-llm",
+      "statement": "Same input, same output. No LLM inside the engine.",
+      "value": "deterministic",
+      "page": "index",
+      "code_refs": ["README.md:303"],
+      "adrs": ["0004"],
+      "status": "aspirational"
+    },
+    {
+      "id": "every-point-has-a-reason",
+      "statement": "A component that cannot be explained in a sentence is not scored.",
+      "value": "contract",
+      "page": "index",
+      "code_refs": ["README.md:306"],
+      "adrs": ["0005"],
+      "status": "aspirational"
+    },
+    {
+      "id": "incomplete-wine-is-recommendable",
+      "statement": "A wine with only { name, producer } must still be recommendable.",
+      "value": "required",
+      "page": "index",
+      "code_refs": ["README.md:408"],
+      "adrs": ["0006"],
+      "status": "aspirational"
+    },
+    {
+      "id": "renormalize-on-missing-component",
+      "statement": "An unknown component is dropped and the remaining weights are renormalized. Missing data never lowers a score.",
+      "value": "drop + renormalize",
+      "page": "index",
+      "code_refs": ["README.md:304", "README.md:305"],
+      "adrs": ["0006"],
+      "status": "aspirational"
+    },
+    {
+      "id": "request-beats-dislikes",
+      "statement": "A grape or region in prefs.dislikes is filtered out unless the request explicitly asks for it, in which case the request wins.",
+      "value": "request wins",
+      "page": "index",
+      "code_refs": ["README.md:287", "README.md:288"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "source-cellar-requires-stock",
+      "statement": "Under source: \"cellar\" a wine must have quantity > 0 and status = in_cellar.",
+      "value": "quantity > 0 AND status = in_cellar",
+      "page": "index",
+      "code_refs": ["README.md:285"],
+      "adrs": ["0008"],
+      "status": "aspirational"
+    },
+    {
+      "id": "source-default-both",
+      "statement": "source defaults to both when the request omits it.",
+      "value": "both",
+      "page": "index",
+      "code_refs": ["README.md:249"],
+      "adrs": ["0008"],
+      "status": "aspirational"
+    },
+    {
+      "id": "two-stage-pipeline",
+      "statement": "Scoring is hard filters first, then a weighted score. Filters remove; the score only orders.",
+      "value": "filters → score",
+      "page": "index",
+      "code_refs": ["README.md:280"],
+      "adrs": ["0004"],
+      "status": "aspirational"
+    },
+    {
+      "id": "use-prefs-default-true",
+      "statement": "use_prefs defaults to true; stored user_prefs apply unless the caller opts out.",
+      "value": true,
+      "page": "index",
+      "code_refs": ["README.md:250"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "weight-budget-fit",
+      "statement": "Budget fit weight.",
+      "value": 0.05,
+      "page": "index",
+      "code_refs": ["README.md:298"],
+      "adrs": ["0004"],
+      "status": "aspirational"
+    },
+    {
+      "id": "weight-drink-window-urgency",
+      "statement": "Drink-window urgency weight. Cellar candidates only.",
+      "value": 0.05,
+      "page": "index",
+      "code_refs": ["README.md:299"],
+      "adrs": ["0004"],
+      "status": "aspirational"
+    },
+    {
+      "id": "weight-food-pairing",
+      "statement": "Food pairing weight.",
+      "value": 0.30,
+      "page": "index",
+      "code_refs": ["README.md:294"],
+      "adrs": ["0004"],
+      "status": "aspirational"
+    },
+    {
+      "id": "weight-palate-fit",
+      "statement": "Palate fit weight.",
+      "value": 0.25,
+      "page": "index",
+      "code_refs": ["README.md:295"],
+      "adrs": ["0004"],
+      "status": "aspirational"
+    },
+    {
+      "id": "weight-personal-history",
+      "statement": "Personal history weight.",
+      "value": 0.20,
+      "page": "index",
+      "code_refs": ["README.md:296"],
+      "adrs": ["0004"],
+      "status": "aspirational"
+    },
+    {
+      "id": "weight-preference-match",
+      "statement": "Preference match weight.",
+      "value": 0.15,
+      "page": "index",
+      "code_refs": ["README.md:297"],
+      "adrs": ["0004"],
+      "status": "aspirational"
+    },
+    {
+      "id": "weights-in-one-config",
+      "statement": "Weights live in one config object, tunable without touching the logic.",
+      "value": "one object",
+      "page": "index",
+      "code_refs": ["README.md:307"],
+      "adrs": ["0004"],
+      "status": "aspirational"
+    },
+    {
+      "id": "weights-sum-to-one",
+      "statement": "The six stated weights sum to exactly 1.00 before any renormalization.",
+      "value": 1.00,
+      "page": "index",
+      "code_refs": ["README.md:294", "README.md:295", "README.md:296", "README.md:297", "README.md:298", "README.md:299"],
+      "adrs": ["0004"],
+      "status": "aspirational"
+    }
+  ],
+  "enums": {
+    "recommend_source": ["cellar", "catalog", "both"]
+  }
+}

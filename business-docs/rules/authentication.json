@@ -1,0 +1,207 @@
+{
+  "_source": "business-docs/wiki/features/authentication",
+  "derived_by": "business-rules-keeper",
+  "feature": "authentication",
+  "updated": "2026-08-29",
+  "rules": [
+    {
+      "id": "auth-precedes-permissions",
+      "statement": "Edge auth runs before any permission check.",
+      "value": "ordering",
+      "page": "index",
+      "code_refs": ["README.md:143"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "bootstrap-by-script",
+      "statement": "The first admin is seeded by scripts/bootstrap-admin.ts, which prints its token once.",
+      "value": "script",
+      "page": "index",
+      "code_refs": ["README.md:315", "README.md:316", "README.md:317"],
+      "adrs": ["0013"],
+      "status": "aspirational"
+    },
+    {
+      "id": "five-step-per-request-flow",
+      "statement": "Every request runs a five-step flow: read the Authorization header, hash and look up the token, load the user, resolve permissions, then pass props to the McpAgent.",
+      "value": ["read header", "hash and look up token", "load user", "resolve permissions", "pass props"],
+      "page": "flow",
+      "code_refs": ["README.md:329", "README.md:330", "README.md:331", "README.md:332", "README.md:333"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "header-scheme",
+      "statement": "Credential travels as Authorization: Bearer <token>.",
+      "value": "Bearer",
+      "page": "index",
+      "code_refs": ["README.md:26", "README.md:385"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "identity-from-props",
+      "statement": "Handlers read the calling user from props, never from tool input.",
+      "value": null,
+      "page": "index",
+      "code_refs": ["README.md:336", "README.md:337"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "last-used-best-effort",
+      "statement": "last_used_at is updated on the way through, best-effort, via ctx.waitUntil.",
+      "value": "best-effort",
+      "page": "index",
+      "code_refs": ["README.md:341"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "permission-resolution",
+      "statement": "permissions = role_permissions(user.role) ∩ (token.scopes ?? everything).",
+      "value": "permissions = role_permissions(user.role) ∩ (token.scopes ?? everything)",
+      "page": "index",
+      "code_refs": ["README.md:332"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "props-shape",
+      "statement": "The resolved identity is { userId, role, tokenId, permissions }, passed as props on the McpAgent.",
+      "value": ["userId", "role", "tokenId", "permissions"],
+      "page": "index",
+      "code_refs": ["README.md:333"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "reject-expired-token",
+      "statement": "expires_at passed → 401.",
+      "value": 401,
+      "page": "index",
+      "code_refs": ["README.md:330"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "reject-inactive-user",
+      "statement": "user.status != active → 401.",
+      "value": 401,
+      "page": "index",
+      "code_refs": ["README.md:331"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "reject-missing-header",
+      "statement": "Missing or malformed header → 401.",
+      "value": 401,
+      "page": "index",
+      "code_refs": ["README.md:329"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "reject-revoked-token",
+      "statement": "revoked_at set → 401.",
+      "value": 401,
+      "page": "index",
+      "code_refs": ["README.md:330"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "reject-unknown-token",
+      "statement": "Hash matches no row → 401.",
+      "value": 401,
+      "page": "index",
+      "code_refs": ["README.md:330"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "rejection-is-opaque",
+      "statement": "All five rejections are indistinguishable to the caller: a bare 401, no tool list, nothing.",
+      "value": 401,
+      "page": "index",
+      "code_refs": ["README.md:144", "README.md:145"],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "scopes-null-means-inherit",
+      "statement": "scopes = null means inherit the user's role in full.",
+      "value": null,
+      "page": "index",
+      "code_refs": ["README.md:63", "README.md:332"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "token-encoding",
+      "statement": "Encoded base64url.",
+      "value": "base64url",
+      "page": "index",
+      "code_refs": ["README.md:321"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "token-entropy",
+      "statement": "A token is 32 bytes from crypto.getRandomValues.",
+      "value": 32,
+      "page": "index",
+      "code_refs": ["README.md:321"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "token-narrows-only",
+      "statement": "A token can only narrow what the role allows, never widen it.",
+      "value": "invariant",
+      "page": "index",
+      "code_refs": ["README.md:112", "README.md:113", "README.md:114"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "token-per-client",
+      "statement": "One token per client (label), so revoking one client leaves the others working.",
+      "value": "1:1",
+      "page": "index",
+      "code_refs": ["README.md:323", "README.md:324"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "token-prefix",
+      "statement": "Prefixed wc_ so it is greppable in logs.",
+      "value": "wc_",
+      "page": "index",
+      "code_refs": ["README.md:321"],
+      "adrs": ["0003"],
+      "status": "aspirational"
+    },
+    {
+      "id": "token-storage-hash-only",
+      "statement": "Only the SHA-256 hash is stored; plaintext is returned exactly once, at creation.",
+      "value": "SHA-256",
+      "page": "index",
+      "code_refs": ["README.md:322"],
+      "adrs": ["0012"],
+      "status": "aspirational"
+    },
+    {
+      "id": "tokens-never-logged",
+      "statement": "Tokens are never logged, plaintext or hashed.",
+      "value": "never",
+      "page": "index",
+      "code_refs": ["README.md:347"],
+      "adrs": ["0012"],
+      "status": "aspirational"
+    }
+  ],
+  "enums": {}
+}
