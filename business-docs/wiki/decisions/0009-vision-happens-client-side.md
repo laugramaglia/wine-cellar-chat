@@ -7,7 +7,7 @@ affects:
   - wine-catalog
 supersedes:
 superseded_by:
-source: README.md:11
+source: business-docs/wiki/shared/mvp-spec.md:25
 ---
 
 # ADR-0009 — Vision happens client-side; the server never sees images
@@ -22,7 +22,7 @@ Every MCP client on the other end already has vision and web search.
 
 ## Decision
 
-Vision and enrichment are the client's job (`README.md:11`, `README.md:34`). Image upload or storage of any kind is explicitly out of scope (`README.md:33`). Tools take structured fields only.
+Vision and enrichment are the client's job (`business-docs/wiki/shared/mvp-spec.md:25`, `business-docs/wiki/shared/mvp-spec.md:48`). Image upload or storage of any kind is explicitly out of scope (`business-docs/wiki/shared/mvp-spec.md:47`). Tools take structured fields only.
 
 ## Consequences
 

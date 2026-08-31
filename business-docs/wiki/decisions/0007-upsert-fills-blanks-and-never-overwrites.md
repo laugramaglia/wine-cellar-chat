@@ -7,7 +7,7 @@ affects:
   - wine-catalog
 supersedes:
 superseded_by:
-source: README.md:160
+source: business-docs/wiki/shared/mvp-spec.md:174
 ---
 
 # ADR-0007 — `wine_upsert` fills blanks and never overwrites
@@ -16,7 +16,7 @@ source: README.md:160
 
 ## Context
 
-Wines are built up over time by an agent: two fields from a blurry photo today, grapes and region next week. The catalogue is also **shared across all users** (`README.md:47`), so one user's careless call can degrade data another user entered.
+Wines are built up over time by an agent: two fields from a blurry photo today, grapes and region next week. The catalogue is also **shared across all users** (`business-docs/wiki/shared/mvp-spec.md:61`), so one user's careless call can degrade data another user entered.
 
 The agent supplying the fields is a language model, which will sometimes confidently produce a wrong region.
 
@@ -24,7 +24,7 @@ The agent supplying the fields is a language model, which will sometimes confide
 
 Fill blanks, never clobber. `overwrite: true` is the explicit escape hatch. The response reports `created: bool` and `fields_filled: string[]` so the caller learns what actually changed.
 
-The definition of done tests it directly: calling `wine_upsert` again with more fields fills blanks and clobbers nothing (`README.md:405`).
+The definition of done tests it directly: calling `wine_upsert` again with more fields fills blanks and clobbers nothing (`business-docs/wiki/shared/mvp-spec.md:419`).
 
 ## Consequences
 

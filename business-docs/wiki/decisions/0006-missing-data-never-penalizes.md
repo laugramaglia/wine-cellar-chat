@@ -8,7 +8,7 @@ affects:
   - wine-catalog
 supersedes:
 superseded_by:
-source: README.md:306
+source: business-docs/wiki/shared/mvp-spec.md:320
 ---
 
 # ADR-0006 — Missing data never penalizes a wine
@@ -17,11 +17,11 @@ source: README.md:306
 
 ## Context
 
-Every field of a wine except `name` is optional (`README.md:91`), because the intended entry path is a photo of a label read by an agent that may extract two fields. If absent data scored zero, a newly-photographed bottle would rank below every fully-described one forever, and the catalogue would punish the exact workflow the product is built around.
+Every field of a wine except `name` is optional (`business-docs/wiki/shared/mvp-spec.md:105`), because the intended entry path is a photo of a label read by an agent that may extract two fields. If absent data scored zero, a newly-photographed bottle would rank below every fully-described one forever, and the catalogue would punish the exact workflow the product is built around.
 
 ## Decision
 
-Drop unknown components; renormalize the rest. A wine with only `{ name, producer }` must still be storable, findable, and recommendable (`README.md:409`).
+Drop unknown components; renormalize the rest. A wine with only `{ name, producer }` must still be storable, findable, and recommendable (`business-docs/wiki/shared/mvp-spec.md:423`).
 
 ## Consequences
 
@@ -36,7 +36,7 @@ Drop unknown components; renormalize the rest. A wine with only `{ name, produce
 | --- | --- |
 | Score missing data as 0 | Buries every newly-added wine; breaks the core workflow. |
 | Score missing data as 0.5 | Invents a fact. A wine is not "medium-bodied" because nobody said. |
-| Filter out incomplete wines | Directly contradicts the definition of done (`README.md:409`). |
+| Filter out incomplete wines | Directly contradicts the definition of done (`business-docs/wiki/shared/mvp-spec.md:423`). |
 
 ## Where this is enforced
 

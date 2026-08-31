@@ -22,12 +22,14 @@ feature's `api.md` page and are derived into `rules/<feature>.json`. See [ADR-00
 ## The state of this wiki
 
 **Every page is `status: stub` and every rule is `aspirational`, because no implementation
-exists yet.** At the time of writing the repository contains a specification (`README.md`)
-and nothing else — the previous contents were an unrelated project, removed in
+exists yet.** At the time of writing the repository contains a specification and nothing
+else — the previous contents were an unrelated project, removed in
 `chore: reset repo to the Wine Cellar MCP project`.
 
-So `code_refs` on these pages point at `README.md` line ranges, not at source files. That is
-deliberate and it is the honest trace: the authority for every claim here is a written
+That specification used to be the repository `README.md`. It now lives in the wiki, verbatim,
+as [`wiki/shared/mvp-spec.md`](wiki/shared/mvp-spec.md); the root `README.md` is a pointer and
+holds no rules of its own. So `code_refs` on these pages point at line ranges of that archived
+spec page, not at source files. That is deliberate and it is the honest trace: the authority for every claim here is a written
 intent, not a running program. As code lands, each feature gets promoted with
 `/business-wiki:feature <slug>`, its refs move to real files, and its rules move from
 `aspirational` to `enforced`. The count of `status: stub` warnings from

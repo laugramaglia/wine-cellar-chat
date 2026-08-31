@@ -1,6 +1,6 @@
 {
   "_source": "business-docs/wiki/features/cellar",
-  "derived_by": "business-rules-keeper",
+  "derived_by": "hand",
   "feature": "cellar",
   "updated": "2026-08-29",
   "rules": [
@@ -9,8 +9,12 @@
       "statement": "cellar_add accepts inline wine fields, which upsert the wine first.",
       "value": null,
       "page": "index",
-      "code_refs": ["README.md:179"],
-      "adrs": ["0007"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:193"
+      ],
+      "adrs": [
+        "0007"
+      ],
       "status": "aspirational"
     },
     {
@@ -18,7 +22,10 @@
       "statement": "No cellar tool takes a user_id; the owner comes from props.",
       "value": null,
       "page": "index",
-      "code_refs": ["README.md:155", "README.md:336"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:169",
+        "business-docs/wiki/shared/mvp-spec.md:350"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -27,8 +34,12 @@
       "statement": "For source: \"cellar\" the engine requires both quantity > 0 and status = in_cellar.",
       "value": "two conditions, AND",
       "page": "index",
-      "code_refs": ["README.md:285"],
-      "adrs": ["0004"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:299"
+      ],
+      "adrs": [
+        "0004"
+      ],
       "status": "aspirational"
     },
     {
@@ -36,8 +47,12 @@
       "statement": "guest holds neither cellar permission, no reads, no mutations.",
       "value": null,
       "page": "index",
-      "code_refs": ["README.md:108"],
-      "adrs": ["0010"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:122"
+      ],
+      "adrs": [
+        "0010"
+      ],
       "status": "aspirational"
     },
     {
@@ -45,7 +60,9 @@
       "statement": "user_delete with hard: true drops that user's cellar items.",
       "value": null,
       "page": "index",
-      "code_refs": ["README.md:221"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:235"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -54,8 +71,12 @@
       "statement": "A cellar item belongs to exactly one user and references one wine.",
       "value": "cellar_items.user_id, .wine_id",
       "page": "index",
-      "code_refs": ["README.md:76"],
-      "adrs": ["0008"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:90"
+      ],
+      "adrs": [
+        "0008"
+      ],
       "status": "aspirational"
     },
     {
@@ -63,25 +84,42 @@
       "statement": "Drinking the last bottle sets status = drunk automatically.",
       "value": null,
       "page": "index",
-      "code_refs": ["README.md:184"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:198"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
     {
       "id": "cellar-list-filters",
       "statement": "cellar_list filters on wine_type, region, ready_to_drink, drink_soon.",
-      "value": ["wine_type", "region", "ready_to_drink", "drink_soon"],
+      "value": [
+        "wine_type",
+        "region",
+        "ready_to_drink",
+        "drink_soon"
+      ],
       "page": "index",
-      "code_refs": ["README.md:186", "README.md:187"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:200",
+        "business-docs/wiki/shared/mvp-spec.md:201"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
     {
       "id": "cellar-list-sort",
       "statement": "sort accepts four keys.",
-      "value": ["drink_until", "purchase_date", "price", "name"],
+      "value": [
+        "drink_until",
+        "purchase_date",
+        "price",
+        "name"
+      ],
       "page": "index",
-      "code_refs": ["README.md:188"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:202"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -90,17 +128,27 @@
       "statement": "review_write with consume: true decrements the cellar.",
       "value": null,
       "page": "index",
-      "code_refs": ["README.md:193"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:207"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
     {
       "id": "cellar-status-enum",
       "statement": "An item's status is one of three values.",
-      "value": ["in_cellar", "drunk", "gifted"],
+      "value": [
+        "in_cellar",
+        "drunk",
+        "gifted"
+      ],
       "page": "index",
-      "code_refs": ["README.md:78"],
-      "adrs": ["0008"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:92"
+      ],
+      "adrs": [
+        "0008"
+      ],
       "status": "aspirational"
     },
     {
@@ -108,12 +156,96 @@
       "statement": "cellar_add and cellar_update require cellar:write; cellar_list requires cellar:read.",
       "value": "cellar:write / cellar:read",
       "page": "index",
-      "code_refs": ["README.md:120", "README.md:121"],
-      "adrs": ["0010"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:134",
+        "business-docs/wiki/shared/mvp-spec.md:135"
+      ],
+      "adrs": [
+        "0010"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "cellar-item-is-a-lot",
+      "statement": "A cellar_items row is a lot of bottles acquired together; there is no unique constraint on (user_id, wine_id) and a user may hold many rows for one wine.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0019-bottles-are-held-as-lots.md"
+      ],
+      "adrs": [
+        "0019"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "stock-is-in-cellar",
+      "statement": "Stock is defined by status = 'in_cellar', never by a quantity of zero. A drunk or gifted lot keeps the count of the bottles that left, as the record of what happened to them.",
+      "value": "WHERE status = 'in_cellar'",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0019-bottles-are-held-as-lots.md"
+      ],
+      "adrs": [
+        "0019"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "partial-gift-splits-the-lot",
+      "statement": "Gifting or consuming part of a lot splits it: the moved bottles become a new row with the new status and the original quantity is reduced by the same amount.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0019-bottles-are-held-as-lots.md"
+      ],
+      "adrs": [
+        "0019"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "auto-drunk-fires-on-every-path",
+      "statement": "The last-bottle auto-transition to drunk is a property of the lot and fires wherever consumption empties it, on review_write consume:true as well as cellar_update.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0019-bottles-are-held-as-lots.md"
+      ],
+      "adrs": [
+        "0019"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-delete-restricted-by-holdings",
+      "statement": "cellar_items.wine_id is ON DELETE RESTRICT, so a wine that any user holds cannot be removed from the shared catalogue.",
+      "value": "ON DELETE RESTRICT",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0019-bottles-are-held-as-lots.md"
+      ],
+      "adrs": [
+        "0019",
+        "0008"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "cellar-bounds",
+      "statement": "quantity >= 0 and drink_from <= drink_until are CHECK constraints, so a negative holding and an inverted drink window are both unstorable.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0020-bounds-are-enforced-in-the-database-too.md"
+      ],
+      "adrs": [
+        "0020"
+      ],
       "status": "aspirational"
     }
   ],
   "enums": {
-    "cellar_item_status": ["in_cellar", "drunk", "gifted"]
+    "cellar_item_status": [
+      "in_cellar",
+      "drunk",
+      "gifted"
+    ]
   }
 }

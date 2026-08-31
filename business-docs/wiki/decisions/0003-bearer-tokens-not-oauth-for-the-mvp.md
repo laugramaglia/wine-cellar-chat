@@ -8,7 +8,7 @@ affects:
   - token-administration
 supersedes:
 superseded_by:
-source: README.md:24
+source: business-docs/wiki/shared/mvp-spec.md:38
 ---
 
 # ADR-0003 — Static bearer tokens for the MVP, OAuth 2.1 as the upgrade path
@@ -19,11 +19,11 @@ source: README.md:24
 
 Remote MCP servers on Cloudflare have first-class OAuth support via `workers-oauth-provider`. Using it would mean a consent screen, an authorization server, refresh handling, and client registration — before a single bottle can be stored.
 
-The server's users are a handful of known people whose accounts an admin creates by hand (`README.md:207`).
+The server's users are a handful of known people whose accounts an admin creates by hand (`business-docs/wiki/shared/mvp-spec.md:221`).
 
 ## Decision
 
-Issue static bearer tokens, one per client, and check them at the Worker edge. OAuth 2.1 is named as the upgrade path (`README.md:29`), not as a non-goal.
+Issue static bearer tokens, one per client, and check them at the Worker edge. OAuth 2.1 is named as the upgrade path (`business-docs/wiki/shared/mvp-spec.md:43`), not as a non-goal.
 
 ## Consequences
 

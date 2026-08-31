@@ -7,7 +7,7 @@ affects:
   - recommendation-engine
 supersedes:
 superseded_by:
-source: README.md:304
+source: business-docs/wiki/shared/mvp-spec.md:318
 ---
 
 # ADR-0004 — The recommendation engine is deterministic and rule-based
@@ -20,14 +20,14 @@ The obvious way to build a wine recommender in 2026 is embeddings, or to ask a m
 
 ## Decision
 
-Two stages — hard filters, then a weighted score across six components (`README.md:290-299`). Deterministic. Weights live in one config object so they can be tuned without touching the logic (`README.md:307`).
+Two stages — hard filters, then a weighted score across six components (`business-docs/wiki/shared/mvp-spec.md:304-313`). Deterministic. Weights live in one config object so they can be tuned without touching the logic (`business-docs/wiki/shared/mvp-spec.md:321`).
 
 ## Consequences
 
 - Recommendations are reproducible, testable, and debuggable: a wrong answer has a component responsible for it.
 - Tuning is editing numbers in one place.
 - Quality is bounded by the pairing table and the weights. It will not surprise anyone pleasantly.
-- No semantic "wines like this one" — that needs embeddings and is explicitly post-MVP (`README.md:419`).
+- No semantic "wines like this one" — that needs embeddings and is explicitly post-MVP (`business-docs/wiki/shared/mvp-spec.md:433`).
 - Enables [[ADR-0005]]: every point of score maps to a reason string, which only works because every point of score has a stated cause.
 
 ## Alternatives considered

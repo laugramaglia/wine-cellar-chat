@@ -8,7 +8,7 @@ affects:
   - cellar
 supersedes:
 superseded_by:
-source: README.md:45
+source: business-docs/wiki/shared/mvp-spec.md:59
 ---
 
 # ADR-0008 — A wine and a cellar item are separate entities
@@ -17,7 +17,7 @@ source: README.md:45
 
 ## Context
 
-The engine must answer two different questions: *"recommend me a Malbec"*, which ranges over everything known, and *"what should I open tonight"*, which ranges only over bottles actually in the house (`README.md:51`).
+The engine must answer two different questions: *"recommend me a Malbec"*, which ranges over everything known, and *"what should I open tonight"*, which ranges only over bottles actually in the house (`business-docs/wiki/shared/mvp-spec.md:65`).
 
 Collapsing the two would mean either a per-user catalogue — so nobody benefits from anyone else's data entry — or ownership fields on a shared row, which cannot represent two people owning the same wine.
 
@@ -29,7 +29,7 @@ Two tables. `cellar_items.wine_id` references the shared bottling; quantity, pri
 
 - `wine_recommend` takes `source: "cellar" | "catalog" | "both"` and the split makes that a filter rather than a different code path.
 - Catalogue data entry is shared work — one user describing a wine helps all of them.
-- Ownership is a join, so search results need an `owned` flag and `quantity` computed per caller (`README.md:175`).
+- Ownership is a join, so search results need an `owned` flag and `quantity` computed per caller (`business-docs/wiki/shared/mvp-spec.md:189`).
 - Sharpens [[ADR-0007]]: because the catalogue is shared, careless writes hurt other people, which is why the merge is conservative.
 
 ## Alternatives considered

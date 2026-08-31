@@ -8,7 +8,7 @@ affects:
   - user-administration
 supersedes:
 superseded_by:
-source: README.md:313
+source: business-docs/wiki/shared/mvp-spec.md:327
 ---
 
 # ADR-0013 — The first admin is seeded by a script, not created through a tool

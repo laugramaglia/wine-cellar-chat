@@ -1,6 +1,6 @@
 {
   "_source": "business-docs/wiki/features/preferences",
-  "derived_by": "business-rules-keeper",
+  "derived_by": "hand",
   "feature": "preferences",
   "updated": "2026-08-29",
   "rules": [
@@ -9,8 +9,12 @@
       "statement": "Anything in prefs.avoid removes a wine from the result set entirely. It is not a penalty.",
       "value": "hard filter",
       "page": "index",
-      "code_refs": ["README.md:286"],
-      "adrs": ["0004"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:300"
+      ],
+      "adrs": [
+        "0004"
+      ],
       "status": "aspirational"
     },
     {
@@ -18,8 +22,12 @@
       "statement": "avoid is jsonb holding allergens and phrases such as \"no oak\", \"no sulfites added\".",
       "value": "free-form list",
       "page": "index",
-      "code_refs": ["README.md:68"],
-      "adrs": ["0004"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:82"
+      ],
+      "adrs": [
+        "0004"
+      ],
       "status": "aspirational"
     },
     {
@@ -27,8 +35,12 @@
       "statement": "budget_min / budget_max feed budget fit, weighted 0.05; inside the band scores 1.0.",
       "value": 0.05,
       "page": "index",
-      "code_refs": ["README.md:298"],
-      "adrs": ["0005"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:312"
+      ],
+      "adrs": [
+        "0005"
+      ],
       "status": "aspirational"
     },
     {
@@ -36,7 +48,9 @@
       "statement": "dislikes.grapes and dislikes.regions are hard filters.",
       "value": "hard filter",
       "page": "index",
-      "code_refs": ["README.md:287"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:301"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -45,8 +59,12 @@
       "statement": "likes feeds the Preference-match score component; it never filters.",
       "value": 0.15,
       "page": "index",
-      "code_refs": ["README.md:297"],
-      "adrs": ["0005"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:311"
+      ],
+      "adrs": [
+        "0005"
+      ],
       "status": "aspirational"
     },
     {
@@ -54,7 +72,9 @@
       "statement": "likes and dislikes are jsonb of the shape { grapes: [], regions: [], styles: [] }.",
       "value": "{grapes,regions,styles}",
       "page": "index",
-      "code_refs": ["README.md:67"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:81"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -63,8 +83,12 @@
       "statement": "prefs_set applies a partial update by merging into the existing row.",
       "value": "merge",
       "page": "index",
-      "code_refs": ["README.md:202"],
-      "adrs": ["0007"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:216"
+      ],
+      "adrs": [
+        "0007"
+      ],
       "status": "aspirational"
     },
     {
@@ -72,7 +96,12 @@
       "statement": "Neither prefs tool takes a user_id; the user comes from the bearer token via props. You cannot read or write another account's profile.",
       "value": "token-resolved",
       "page": "index",
-      "code_refs": ["README.md:154", "README.md:156", "README.md:336", "README.md:337"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:168",
+        "business-docs/wiki/shared/mvp-spec.md:170",
+        "business-docs/wiki/shared/mvp-spec.md:350",
+        "business-docs/wiki/shared/mvp-spec.md:351"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -81,7 +110,9 @@
       "statement": "user_prefs.user_id is the primary key. Exactly one profile per user; there is no second row to create.",
       "value": "user_id (PK)",
       "page": "index",
-      "code_refs": ["README.md:65"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:79"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -90,7 +121,11 @@
       "statement": "sweetness / body / tannin / acidity are the user's target values on the same enums a wine carries, not filters.",
       "value": "shared enums",
       "page": "index",
-      "code_refs": ["README.md:66", "README.md:87", "README.md:88"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:80",
+        "business-docs/wiki/shared/mvp-spec.md:101",
+        "business-docs/wiki/shared/mvp-spec.md:102"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -99,16 +134,35 @@
       "statement": "Palate fit, the four target fields vs the wine's, by distance on the 5-point scale, is weighted 0.25.",
       "value": 0.25,
       "page": "index",
-      "code_refs": ["README.md:295"],
-      "adrs": ["0005"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:309"
+      ],
+      "adrs": [
+        "0005"
+      ],
       "status": "aspirational"
     },
     {
       "id": "prefs-fields",
       "statement": "The stored profile is likes, dislikes, budget_min, budget_max, sweetness, body, tannin, acidity, avoid, notes, updated_at.",
-      "value": ["likes", "dislikes", "budget_min", "budget_max", "sweetness", "body", "tannin", "acidity", "avoid", "notes", "updated_at"],
+      "value": [
+        "likes",
+        "dislikes",
+        "budget_min",
+        "budget_max",
+        "sweetness",
+        "body",
+        "tannin",
+        "acidity",
+        "avoid",
+        "notes",
+        "updated_at"
+      ],
       "page": "index",
-      "code_refs": ["README.md:65", "README.md:66"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:79",
+        "business-docs/wiki/shared/mvp-spec.md:80"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -117,8 +171,12 @@
       "statement": "prefs_get requires prefs:read, held by admin, member and guest.",
       "value": "all roles",
       "page": "index",
-      "code_refs": ["README.md:124"],
-      "adrs": ["0010"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:138"
+      ],
+      "adrs": [
+        "0010"
+      ],
       "status": "aspirational"
     },
     {
@@ -126,8 +184,12 @@
       "statement": "prefs_set requires prefs:write, held by admin and member. A guest cannot write prefs.",
       "value": "not guest",
       "page": "index",
-      "code_refs": ["README.md:125"],
-      "adrs": ["0010"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:139"
+      ],
+      "adrs": [
+        "0010"
+      ],
       "status": "aspirational"
     },
     {
@@ -135,8 +197,14 @@
       "statement": "The profile is keyed on the user, never on the token or the client, so every client of that user reads and writes the same row.",
       "value": "user-keyed",
       "page": "index",
-      "code_refs": ["README.md:6", "README.md:9", "README.md:203"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:20",
+        "business-docs/wiki/shared/mvp-spec.md:23",
+        "business-docs/wiki/shared/mvp-spec.md:217"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
@@ -144,8 +212,12 @@
       "statement": "replace: true on prefs_set overwrites the profile instead of merging.",
       "value": "replace: true",
       "page": "index",
-      "code_refs": ["README.md:202"],
-      "adrs": ["0007"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:216"
+      ],
+      "adrs": [
+        "0007"
+      ],
       "status": "aspirational"
     },
     {
@@ -153,7 +225,10 @@
       "statement": "A disliked grape or region is filtered out unless the request explicitly asks for it, then the request wins.",
       "value": "request wins",
       "page": "index",
-      "code_refs": ["README.md:287", "README.md:288"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:301",
+        "business-docs/wiki/shared/mvp-spec.md:302"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -162,8 +237,12 @@
       "statement": "Definition of done: two tokens for the same user, from two different clients, see one cellar and one prefs profile.",
       "value": "acceptance test",
       "page": "index",
-      "code_refs": ["README.md:402"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:416"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
@@ -171,15 +250,84 @@
       "statement": "wine_recommend applies the stored profile unless the caller passes use_prefs: false. Default true.",
       "value": true,
       "page": "index",
-      "code_refs": ["README.md:250"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:264"
+      ],
       "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "prefs-default-to-empty-shapes",
+      "statement": "likes, dislikes and avoid are NOT NULL with their documented empty shapes as defaults, so a user who has never written preferences reads back the same shape as everyone else.",
+      "value": {
+        "likes": {
+          "grapes": [],
+          "regions": [],
+          "styles": []
+        }
+      },
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0020-bounds-are-enforced-in-the-database-too.md"
+      ],
+      "adrs": [
+        "0020"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "prefs-palate-shares-the-wine-type",
+      "statement": "A stored palate preference and a wine attribute are the same Postgres intensity type, which is the precondition for measuring palate fit as a distance.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0015-closed-enumerations-are-database-types.md"
+      ],
+      "adrs": [
+        "0015"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "budget-order-checked",
+      "statement": "budget_min <= budget_max is a CHECK constraint; both are numeric, never binary floats, and no currency is recorded anywhere.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0020-bounds-are-enforced-in-the-database-too.md"
+      ],
+      "adrs": [
+        "0020"
+      ],
       "status": "aspirational"
     }
   ],
   "enums": {
-    "sweetness": ["bone_dry", "dry", "off_dry", "medium_sweet", "sweet"],
-    "body": ["low", "medium_minus", "medium", "medium_plus", "high"],
-    "tannin": ["low", "medium_minus", "medium", "medium_plus", "high"],
-    "acidity": ["low", "medium_minus", "medium", "medium_plus", "high"]
+    "sweetness": [
+      "bone_dry",
+      "dry",
+      "off_dry",
+      "medium_sweet",
+      "sweet"
+    ],
+    "body": [
+      "low",
+      "medium_minus",
+      "medium",
+      "medium_plus",
+      "high"
+    ],
+    "tannin": [
+      "low",
+      "medium_minus",
+      "medium",
+      "medium_plus",
+      "high"
+    ],
+    "acidity": [
+      "low",
+      "medium_minus",
+      "medium",
+      "medium_plus",
+      "high"
+    ]
   }
 }

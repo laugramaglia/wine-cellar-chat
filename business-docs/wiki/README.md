@@ -3,7 +3,7 @@
 The source of truth for this project's business rules. How this relates to the derived formats, and how the whole thing is maintained, is one level up: [`../README.md`](../README.md).
 
 > **Nothing here is implemented yet.** Every page is `status: stub`, every rule is
-> `aspirational`, and `code_refs` cite `README.md` — the specification — because there is
+> `aspirational`, and `code_refs` cite [[mvp-spec]] — the archived specification — because there is
 > no source code in this repository. Read this as intent, not as behaviour.
 
 ## Layout
@@ -13,8 +13,8 @@ README.md          this file
 decisions/         ADRs — NNNN-slug.md, citable from code as ADR-NNNN
 features/<x>/      index, flow, screens, states, errors, copy, validations,
                    api, decisions, related
-shared/            glossary, data types, error codes, divergences, and the
-                   cross-cutting concerns this project actually has
+shared/            glossary, data types, error codes, divergences, the archived
+                   MVP specification, and the cross-cutting concerns this project has
 shared/templates/  the page templates, for humans
 ```
 
@@ -40,6 +40,7 @@ shared/templates/  the page templates, for humans
 - Need a rule by key instead of by page? `../rules/<feature>.json`, regenerated from these pages.
 - Writing a tool handler? [[mcp-protocol]] first — it governs naming, errors, and tool visibility for every feature.
 - Touching auth? [[security]] holds the rules that are not any one feature's property.
+- Chasing a `code_refs` citation? It points into [[mvp-spec]] — the original `README.md`, archived here verbatim.
 
 ## What belongs here
 

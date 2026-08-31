@@ -1,6 +1,6 @@
 {
   "_source": "business-docs/wiki/features/token-administration",
-  "derived_by": "business-rules-keeper",
+  "derived_by": "hand",
   "feature": "token-administration",
   "updated": "2026-08-29",
   "rules": [
@@ -9,7 +9,9 @@
       "statement": "All three tools require admin:tokens, which only admin holds.",
       "value": "admin:tokens",
       "page": "index",
-      "code_refs": ["README.md:128"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:142"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -18,7 +20,10 @@
       "statement": "user_delete revokes that user's tokens as part of the soft-delete.",
       "value": "cascade",
       "page": "index",
-      "code_refs": ["README.md:220", "README.md:221"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:234",
+        "business-docs/wiki/shared/mvp-spec.md:235"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -27,8 +32,13 @@
       "statement": "expires_at is optional. A token created without one never expires.",
       "value": "optional",
       "page": "index",
-      "code_refs": ["README.md:61", "README.md:325"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:75",
+        "business-docs/wiki/shared/mvp-spec.md:339"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
@@ -36,8 +46,13 @@
       "statement": "Only the SHA-256 hash is stored, as api_tokens.token_hash.",
       "value": "SHA-256",
       "page": "index",
-      "code_refs": ["README.md:60", "README.md:322"],
-      "adrs": ["0012"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:74",
+        "business-docs/wiki/shared/mvp-spec.md:336"
+      ],
+      "adrs": [
+        "0012"
+      ],
       "status": "aspirational"
     },
     {
@@ -45,7 +60,9 @@
       "statement": "\"token issued\" is written to audit_log.",
       "value": "1 entry",
       "page": "index",
-      "code_refs": ["README.md:345"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:359"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -54,8 +71,12 @@
       "statement": "token_list never returns the token itself.",
       "value": "never",
       "page": "index",
-      "code_refs": ["README.md:230"],
-      "adrs": ["0012"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:244"
+      ],
+      "adrs": [
+        "0012"
+      ],
       "status": "aspirational"
     },
     {
@@ -63,8 +84,13 @@
       "statement": "token_list never returns a recoverable prefix beyond the last 4 characters.",
       "value": 4,
       "page": "index",
-      "code_refs": ["README.md:230", "README.md:231"],
-      "adrs": ["0012"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:244",
+        "business-docs/wiki/shared/mvp-spec.md:245"
+      ],
+      "adrs": [
+        "0012"
+      ],
       "status": "aspirational"
     },
     {
@@ -72,8 +98,14 @@
       "statement": "One token per client, distinguished by label (claude-desktop, gemini, phone), so revoking Gemini leaves Claude working.",
       "value": "1 per client",
       "page": "index",
-      "code_refs": ["README.md:62", "README.md:323", "README.md:324"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:76",
+        "business-docs/wiki/shared/mvp-spec.md:337",
+        "business-docs/wiki/shared/mvp-spec.md:338"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
@@ -81,8 +113,14 @@
       "statement": "token_create returns the plaintext token exactly once, at creation. It is never retrievable again, by anyone, including an admin.",
       "value": "once",
       "page": "index",
-      "code_refs": ["README.md:226", "README.md:227", "README.md:322"],
-      "adrs": ["0012"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:240",
+        "business-docs/wiki/shared/mvp-spec.md:241",
+        "business-docs/wiki/shared/mvp-spec.md:336"
+      ],
+      "adrs": [
+        "0012"
+      ],
       "status": "aspirational"
     },
     {
@@ -90,7 +128,9 @@
       "statement": "\"token revoked\" is written to audit_log.",
       "value": "1 entry",
       "page": "index",
-      "code_refs": ["README.md:345"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:359"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -99,7 +139,9 @@
       "statement": "token_revoke takes a token id — not a user, not a label.",
       "value": "token id",
       "page": "index",
-      "code_refs": ["README.md:233"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:247"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -108,7 +150,9 @@
       "statement": "Revocation takes effect immediately.",
       "value": "immediate",
       "page": "index",
-      "code_refs": ["README.md:233"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:247"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -117,8 +161,17 @@
       "statement": "An explicit scopes array is a subset of the user's permissions. A token can only ever narrow what its user's role allows, never widen it.",
       "value": "invariant",
       "page": "index",
-      "code_refs": ["README.md:111", "README.md:112", "README.md:113", "README.md:114", "README.md:225", "README.md:325"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:125",
+        "business-docs/wiki/shared/mvp-spec.md:126",
+        "business-docs/wiki/shared/mvp-spec.md:127",
+        "business-docs/wiki/shared/mvp-spec.md:128",
+        "business-docs/wiki/shared/mvp-spec.md:239",
+        "business-docs/wiki/shared/mvp-spec.md:339"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
@@ -126,8 +179,14 @@
       "statement": "scopes is nullable. null means inherit the user's role in full.",
       "value": null,
       "page": "index",
-      "code_refs": ["README.md:60", "README.md:63", "README.md:64"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:74",
+        "business-docs/wiki/shared/mvp-spec.md:77",
+        "business-docs/wiki/shared/mvp-spec.md:78"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
@@ -135,16 +194,29 @@
       "statement": "Suspending a user does not set revoked_at. The auth flow rejects on user.status instead, so reinstating the user silently restores every token.",
       "value": "no revoke",
       "page": "index",
-      "code_refs": ["README.md:144", "README.md:145", "README.md:216", "README.md:331"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:158",
+        "business-docs/wiki/shared/mvp-spec.md:159",
+        "business-docs/wiki/shared/mvp-spec.md:230",
+        "business-docs/wiki/shared/mvp-spec.md:345"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
     {
       "id": "token-create-inputs",
       "statement": "token_create takes user_id, label, optional scopes, optional expires_at.",
-      "value": ["user_id", "label", "scopes", "expires_at"],
+      "value": [
+        "user_id",
+        "label",
+        "scopes",
+        "expires_at"
+      ],
       "page": "index",
-      "code_refs": ["README.md:224", "README.md:225"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:238",
+        "business-docs/wiki/shared/mvp-spec.md:239"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -153,8 +225,12 @@
       "statement": "32 bytes of crypto.getRandomValues, base64url, prefixed wc_ so it is greppable in logs.",
       "value": "wc_ + 32B",
       "page": "index",
-      "code_refs": ["README.md:321"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:335"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
@@ -162,8 +238,76 @@
       "statement": "Tokens are never logged, in plaintext or hashed — including in audit_log.",
       "value": "never",
       "page": "index",
-      "code_refs": ["README.md:347"],
-      "adrs": ["0012"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:361"
+      ],
+      "adrs": [
+        "0012"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "one-live-token-per-label",
+      "statement": "(user_id, lower(label)) is unique among tokens with revoked_at IS NULL, so selective per-client revocation is structural rather than a naming convention; a revoked label can be reissued.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0018-token-identity-is-constrained-in-the-database.md"
+      ],
+      "adrs": [
+        "0018"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "scopes-null-or-non-empty",
+      "statement": "scopes is either NULL, meaning inherit the user's role in full, or a non-empty array; an empty array cannot be stored.",
+      "value": "CHECK (scopes IS NULL OR cardinality(scopes) > 0)",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0018-token-identity-is-constrained-in-the-database.md"
+      ],
+      "adrs": [
+        "0018"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "token-last4-is-stored",
+      "statement": "token_last4 is stored alongside the hash because token_list must show it and the plaintext is unrecoverable by then.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0018-token-identity-is-constrained-in-the-database.md"
+      ],
+      "adrs": [
+        "0018",
+        "0012"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "api-token-proves-identity-at-consent",
+      "statement": "The consent screen identifies a person by a live `wc_` API token, because the system has no passwords. The token is verified and discarded; the connecting client never receives it.",
+      "value": "paste a token",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0022-oauth-alongside-bearer-tokens.md"
+      ],
+      "adrs": [
+        "0022"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "revoking-a-token-leaves-grants-alive",
+      "statement": "Revoking a `wc_` token does **not** revoke OAuth grants already authorized with it. Recorded as an open question, not a decision.",
+      "value": "known gap",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0022-oauth-alongside-bearer-tokens.md"
+      ],
+      "adrs": [
+        "0022"
+      ],
       "status": "aspirational"
     }
   ],

@@ -22,7 +22,7 @@ source: human decision
 
 ## Context
 
-The business-wiki system derives an OpenAPI document by default. This project's entire HTTP surface is a single `POST /mcp` carrying MCP JSON-RPC (`README.md:22`). Every tool call — `wine_upsert`, `token_revoke`, all of them — is one request to that one path.
+The business-wiki system derives an OpenAPI document by default. This project's entire HTTP surface is a single `POST /mcp` carrying MCP JSON-RPC (`business-docs/wiki/shared/mvp-spec.md:36`). Every tool call — `wine_upsert`, `token_revoke`, all of them — is one request to that one path.
 
 ## Decision
 

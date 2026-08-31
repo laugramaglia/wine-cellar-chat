@@ -7,7 +7,7 @@ affects:
   - recommendation-engine
 supersedes:
 superseded_by:
-source: README.md:273
+source: business-docs/wiki/shared/mvp-spec.md:287
 ---
 
 # ADR-0005 — Every point of score maps to a reason string
@@ -18,13 +18,13 @@ source: README.md:273
 
 An agent that says "try the Malbec" is guessing as far as the user can tell. An agent that says "Malbec matches a grape you rate highly — avg 92 over 4 reviews, and its window closes in 5 months" is making a claim the user can check and disagree with.
 
-The engine is rule-based **precisely so** this is possible (`README.md:273`).
+The engine is rule-based **precisely so** this is possible (`business-docs/wiki/shared/mvp-spec.md:287`).
 
 ## Decision
 
 Every result carries `reasons: string[]` and `penalties: string[]`. Every contributing component produces at least one. A component that cannot produce one is removed from the engine rather than scored silently.
 
-The definition of done requires every recommendation to carry at least one non-empty `reasons` entry (`README.md:407`).
+The definition of done requires every recommendation to carry at least one non-empty `reasons` entry (`business-docs/wiki/shared/mvp-spec.md:421`).
 
 ## Consequences
 

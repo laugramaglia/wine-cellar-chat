@@ -8,7 +8,7 @@ affects:
   - token-administration
 supersedes:
 superseded_by:
-source: README.md:322
+source: business-docs/wiki/shared/mvp-spec.md:336
 ---
 
 # ADR-0012 — Only the token hash is stored; plaintext is returned exactly once
@@ -23,7 +23,7 @@ Admins will want to look a token up — "which key did I give Fabian?" — and t
 
 ## Decision
 
-Store `token_hash` only. Return the plaintext once, at creation (`README.md:322`). `token_list` returns label, scopes, timestamps, and no more than the last 4 characters (`README.md:230`). Tokens are never logged, plaintext or hashed (`README.md:347`).
+Store `token_hash` only. Return the plaintext once, at creation (`business-docs/wiki/shared/mvp-spec.md:336`). `token_list` returns label, scopes, timestamps, and no more than the last 4 characters (`business-docs/wiki/shared/mvp-spec.md:244`). Tokens are never logged, plaintext or hashed (`business-docs/wiki/shared/mvp-spec.md:361`).
 
 Tokens are 32 bytes from `crypto.getRandomValues`, base64url, prefixed `wc_` so they are greppable in logs — which is a detection aid for a leak, not permission to log them.
 
@@ -32,7 +32,7 @@ Tokens are 32 bytes from `crypto.getRandomValues`, base64url, prefixed `wc_` so 
 - A database compromise yields no usable credentials.
 - A lost token is replaced, never recovered. Revoke and reissue is the only path.
 - The `user_create` + `issue_token: true` response is the one moment the secret exists in transit; that response is unusually sensitive.
-- One token per client means revoking Gemini leaves Claude working (`README.md:324`).
+- One token per client means revoking Gemini leaves Claude working (`business-docs/wiki/shared/mvp-spec.md:338`).
 
 ## Alternatives considered
 

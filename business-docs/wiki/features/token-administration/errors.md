@@ -4,7 +4,7 @@ page: errors
 status: stub
 source_of_truth: wiki
 code_refs:
-  - README.md:139
+  - business-docs/wiki/shared/mvp-spec.md:153
 updated: 2026-08-29
 ---
 
@@ -18,12 +18,12 @@ Shared catalogue: [[error-codes]].
 
 | Condition | Code / exception | What the user sees | Recovery |
 | --- | --- | --- | --- |
-| Caller's own token is unknown, revoked, or expired | `401` at the Worker edge (`README.md:143-144`) | Connection refused, no tool list, nothing | Obtain a working token |
-| Caller's user is `status = suspended` | `401`, identical to the above (`README.md:144-145`) | Same opaque failure | An admin reinstates the account |
-| A non-admin calls a token tool | MCP error: `Permission denied: 'user_create' requires 'admin:users'; your role is 'member'.` — the same shape for `admin:tokens` (`README.md:139-141`) | An explicit message the agent reports instead of retrying | Ask an admin |
-| A non-admin *looks for* a token tool | It is absent from `tools/list` (`README.md:132-134`) | The model never sees `token_create` | — |
+| Caller's own token is unknown, revoked, or expired | `401` at the Worker edge (`business-docs/wiki/shared/mvp-spec.md:157-158`) | Connection refused, no tool list, nothing | Obtain a working token |
+| Caller's user is `status = suspended` | `401`, identical to the above (`business-docs/wiki/shared/mvp-spec.md:158-159`) | Same opaque failure | An admin reinstates the account |
+| A non-admin calls a token tool | MCP error: `Permission denied: 'user_create' requires 'admin:users'; your role is 'member'.` — the same shape for `admin:tokens` (`business-docs/wiki/shared/mvp-spec.md:153-155`) | An explicit message the agent reports instead of retrying | Ask an admin |
+| A non-admin *looks for* a token tool | It is absent from `tools/list` (`business-docs/wiki/shared/mvp-spec.md:146-148`) | The model never sees `token_create` | — |
 
-The rejection message is deliberately explicit "so the agent reports it instead of retrying in a loop" (`README.md:141`). That is a product rule about agent behaviour, not just phrasing.
+The rejection message is deliberately explicit "so the agent reports it instead of retrying in a loop" (`business-docs/wiki/shared/mvp-spec.md:155`). That is a product rule about agent behaviour, not just phrasing.
 
 ## Failures the specification does not state
 
@@ -37,8 +37,8 @@ Each of these is a real path with no defined behaviour. They belong in [[diverge
 | `token_create` with `expires_at` already in the past | Whether it is rejected or creates a born-dead token |
 | `token_revoke` on an unknown token id | Error shape |
 | `token_revoke` on an already-revoked token | **Idempotent or an error?** Also: does it write a second `audit_log` entry? |
-| `token_revoke` on the caller's *own* token | Nothing forbids an admin locking themselves out. `user_update` has explicit self-harm guards (`README.md:217-218`); `token_revoke` has none stated |
-| Revoking the last active admin's last token | Same gap: the last-admin guards protect the *account* (`README.md:217-218`), not its keys |
+| `token_revoke` on the caller's *own* token | Nothing forbids an admin locking themselves out. `user_update` has explicit self-harm guards (`business-docs/wiki/shared/mvp-spec.md:231-232`); `token_revoke` has none stated |
+| Revoking the last active admin's last token | Same gap: the last-admin guards protect the *account* (`business-docs/wiki/shared/mvp-spec.md:231-232`), not its keys |
 | Too many tokens for one user | No maximum is stated |
 | Repeated `token_create` calls | No rate limit is stated anywhere ([[security]]) |
 
@@ -46,9 +46,9 @@ Each of these is a real path with no defined behaviour. They belong in [[diverge
 
 | Where | What is swallowed | What the user experiences instead |
 | --- | --- | --- |
-| `last_used_at` write | A deferred `ctx.waitUntil` update that fails or never runs (`README.md:341`) | A stale or null "last used" in `token_list`, indistinguishable from a genuinely unused token. See [[token-administration-states]] |
-| Suspension | Tokens are not revoked; the *user lookup* fails instead (`README.md:216`, `README.md:331`) | `token_list` still shows the tokens as un-revoked while every one of them returns `401` |
-| Every edge rejection | Five distinct causes collapse into one bare `401` (`README.md:143-145`) | Deliberate — the caller cannot distinguish "wrong token" from "suspended account", which is the point. Owned by [[authentication-index]] |
+| `last_used_at` write | A deferred `ctx.waitUntil` update that fails or never runs (`business-docs/wiki/shared/mvp-spec.md:355`) | A stale or null "last used" in `token_list`, indistinguishable from a genuinely unused token. See [[token-administration-states]] |
+| Suspension | Tokens are not revoked; the *user lookup* fails instead (`business-docs/wiki/shared/mvp-spec.md:230`, `business-docs/wiki/shared/mvp-spec.md:345`) | `token_list` still shows the tokens as un-revoked while every one of them returns `401` |
+| Every edge rejection | Five distinct causes collapse into one bare `401` (`business-docs/wiki/shared/mvp-spec.md:157-159`) | Deliberate — the caller cannot distinguish "wrong token" from "suspended account", which is the point. Owned by [[authentication-index]] |
 
 The first two are accidental and belong in [[divergences]]. The third is a decision.
 

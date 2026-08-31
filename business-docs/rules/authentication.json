@@ -1,6 +1,6 @@
 {
   "_source": "business-docs/wiki/features/authentication",
-  "derived_by": "business-rules-keeper",
+  "derived_by": "hand",
   "feature": "authentication",
   "updated": "2026-08-29",
   "rules": [
@@ -9,8 +9,12 @@
       "statement": "Edge auth runs before any permission check.",
       "value": "ordering",
       "page": "index",
-      "code_refs": ["README.md:143"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:157"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
@@ -18,17 +22,37 @@
       "statement": "The first admin is seeded by scripts/bootstrap-admin.ts, which prints its token once.",
       "value": "script",
       "page": "index",
-      "code_refs": ["README.md:315", "README.md:316", "README.md:317"],
-      "adrs": ["0013"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:329",
+        "business-docs/wiki/shared/mvp-spec.md:330",
+        "business-docs/wiki/shared/mvp-spec.md:331"
+      ],
+      "adrs": [
+        "0013"
+      ],
       "status": "aspirational"
     },
     {
       "id": "five-step-per-request-flow",
       "statement": "Every request runs a five-step flow: read the Authorization header, hash and look up the token, load the user, resolve permissions, then pass props to the McpAgent.",
-      "value": ["read header", "hash and look up token", "load user", "resolve permissions", "pass props"],
+      "value": [
+        "read header",
+        "hash and look up token",
+        "load user",
+        "resolve permissions",
+        "pass props"
+      ],
       "page": "flow",
-      "code_refs": ["README.md:329", "README.md:330", "README.md:331", "README.md:332", "README.md:333"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:343",
+        "business-docs/wiki/shared/mvp-spec.md:344",
+        "business-docs/wiki/shared/mvp-spec.md:345",
+        "business-docs/wiki/shared/mvp-spec.md:346",
+        "business-docs/wiki/shared/mvp-spec.md:347"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
@@ -36,8 +60,13 @@
       "statement": "Credential travels as Authorization: Bearer <token>.",
       "value": "Bearer",
       "page": "index",
-      "code_refs": ["README.md:26", "README.md:385"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:40",
+        "business-docs/wiki/shared/mvp-spec.md:399"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
@@ -45,7 +74,10 @@
       "statement": "Handlers read the calling user from props, never from tool input.",
       "value": null,
       "page": "index",
-      "code_refs": ["README.md:336", "README.md:337"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:350",
+        "business-docs/wiki/shared/mvp-spec.md:351"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -54,7 +86,9 @@
       "statement": "last_used_at is updated on the way through, best-effort, via ctx.waitUntil.",
       "value": "best-effort",
       "page": "index",
-      "code_refs": ["README.md:341"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:355"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -63,16 +97,27 @@
       "statement": "permissions = role_permissions(user.role) ∩ (token.scopes ?? everything).",
       "value": "permissions = role_permissions(user.role) ∩ (token.scopes ?? everything)",
       "page": "index",
-      "code_refs": ["README.md:332"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:346"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
       "id": "props-shape",
       "statement": "The resolved identity is { userId, role, tokenId, permissions }, passed as props on the McpAgent.",
-      "value": ["userId", "role", "tokenId", "permissions"],
+      "value": [
+        "userId",
+        "role",
+        "tokenId",
+        "permissions"
+      ],
       "page": "index",
-      "code_refs": ["README.md:333"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:347"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -81,7 +126,9 @@
       "statement": "expires_at passed → 401.",
       "value": 401,
       "page": "index",
-      "code_refs": ["README.md:330"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:344"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -90,7 +137,9 @@
       "statement": "user.status != active → 401.",
       "value": 401,
       "page": "index",
-      "code_refs": ["README.md:331"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:345"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -99,7 +148,9 @@
       "statement": "Missing or malformed header → 401.",
       "value": 401,
       "page": "index",
-      "code_refs": ["README.md:329"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:343"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -108,7 +159,9 @@
       "statement": "revoked_at set → 401.",
       "value": 401,
       "page": "index",
-      "code_refs": ["README.md:330"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:344"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -117,7 +170,9 @@
       "statement": "Hash matches no row → 401.",
       "value": 401,
       "page": "index",
-      "code_refs": ["README.md:330"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:344"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -126,7 +181,10 @@
       "statement": "All five rejections are indistinguishable to the caller: a bare 401, no tool list, nothing.",
       "value": 401,
       "page": "index",
-      "code_refs": ["README.md:144", "README.md:145"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:158",
+        "business-docs/wiki/shared/mvp-spec.md:159"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -135,8 +193,13 @@
       "statement": "scopes = null means inherit the user's role in full.",
       "value": null,
       "page": "index",
-      "code_refs": ["README.md:63", "README.md:332"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:77",
+        "business-docs/wiki/shared/mvp-spec.md:346"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
@@ -144,8 +207,12 @@
       "statement": "Encoded base64url.",
       "value": "base64url",
       "page": "index",
-      "code_refs": ["README.md:321"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:335"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
@@ -153,8 +220,12 @@
       "statement": "A token is 32 bytes from crypto.getRandomValues.",
       "value": 32,
       "page": "index",
-      "code_refs": ["README.md:321"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:335"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
@@ -162,8 +233,14 @@
       "statement": "A token can only narrow what the role allows, never widen it.",
       "value": "invariant",
       "page": "index",
-      "code_refs": ["README.md:112", "README.md:113", "README.md:114"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:126",
+        "business-docs/wiki/shared/mvp-spec.md:127",
+        "business-docs/wiki/shared/mvp-spec.md:128"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
@@ -171,8 +248,13 @@
       "statement": "One token per client (label), so revoking one client leaves the others working.",
       "value": "1:1",
       "page": "index",
-      "code_refs": ["README.md:323", "README.md:324"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:337",
+        "business-docs/wiki/shared/mvp-spec.md:338"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
@@ -180,8 +262,12 @@
       "statement": "Prefixed wc_ so it is greppable in logs.",
       "value": "wc_",
       "page": "index",
-      "code_refs": ["README.md:321"],
-      "adrs": ["0003"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:335"
+      ],
+      "adrs": [
+        "0003"
+      ],
       "status": "aspirational"
     },
     {
@@ -189,8 +275,12 @@
       "statement": "Only the SHA-256 hash is stored; plaintext is returned exactly once, at creation.",
       "value": "SHA-256",
       "page": "index",
-      "code_refs": ["README.md:322"],
-      "adrs": ["0012"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:336"
+      ],
+      "adrs": [
+        "0012"
+      ],
       "status": "aspirational"
     },
     {
@@ -198,8 +288,64 @@
       "statement": "Tokens are never logged, plaintext or hashed.",
       "value": "never",
       "page": "index",
-      "code_refs": ["README.md:347"],
-      "adrs": ["0012"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:361"
+      ],
+      "adrs": [
+        "0012"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "token-hash-is-unique-32-bytes",
+      "statement": "api_tokens.token_hash is a bytea of exactly 32 bytes with a unique index, so the per-request lookup is provably single-row and a wrong-length hash fails at write time.",
+      "value": "UNIQUE, octet_length = 32",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0018-token-identity-is-constrained-in-the-database.md"
+      ],
+      "adrs": [
+        "0018",
+        "0012"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "deleted-user-rejected-by-existing-check",
+      "statement": "A deleted user is rejected by the existing status != active step of the per-request flow, with no additional branch.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0017-deletion-is-a-status-and-email-is-unique-among-the-living.md"
+      ],
+      "adrs": [
+        "0017"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "two-credential-types-one-endpoint",
+      "statement": "`/mcp` accepts an OAuth 2.1 access token or a static `wc_` bearer token, and resolves both to the same identity. One endpoint, two credential types.",
+      "value": "OAuth 2.1 + bearer",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0022-oauth-alongside-bearer-tokens.md"
+      ],
+      "adrs": [
+        "0022"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "oauth-session-not-rechecked",
+      "statement": "An OAuth access token carries its props from the grant and is not re-checked against user status until it expires (1 hour), so suspension is **not** immediate for an OAuth session — unlike the bearer path.",
+      "value": "up to 1 hour",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0022-oauth-alongside-bearer-tokens.md"
+      ],
+      "adrs": [
+        "0022"
+      ],
       "status": "aspirational"
     }
   ],

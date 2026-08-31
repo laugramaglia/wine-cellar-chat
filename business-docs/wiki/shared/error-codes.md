@@ -3,14 +3,14 @@ page: error-codes
 status: stub
 updated: 2026-08-29
 code_refs:
-  - README.md:139
+  - business-docs/wiki/shared/mvp-spec.md:153
 ---
 
 # Error catalogue
 
 Shared failure conditions. A feature's own `errors.md` links here rather than restating these.
 
-Source: `README.md:139-151` (rejections and edge auth), `README.md:327-342` (per-request flow).
+Source: `business-docs/wiki/shared/mvp-spec.md:153-165` (rejections and edge auth), `business-docs/wiki/shared/mvp-spec.md:341-356` (per-request flow).
 
 ## Transport-level — before any tool runs
 

@@ -7,7 +7,7 @@ affects:
   - authorization
 supersedes:
 superseded_by:
-source: README.md:147
+source: business-docs/wiki/shared/mvp-spec.md:161
 ---
 
 # ADR-0011 — A tool without a declared permission is a compile error
@@ -24,7 +24,7 @@ An unauthenticated tool is silent by nature: nothing fails, nothing logs, and it
 
 One record keyed by the tool-name union, so the type system requires an entry for every tool. Not a lookup with a default, not a decorator that can be omitted.
 
-The definition of done states it as a test: every tool in `TOOL_PERMISSIONS` maps to a permission — a missing entry fails to compile (`README.md:412`).
+The definition of done states it as a test: every tool in `TOOL_PERMISSIONS` maps to a permission — a missing entry fails to compile (`business-docs/wiki/shared/mvp-spec.md:426`).
 
 ## Consequences
 

@@ -4,8 +4,8 @@ page: states
 status: stub
 source_of_truth: wiki
 code_refs:
-  - README.md:290
-  - README.md:304
+  - business-docs/wiki/shared/mvp-spec.md:304
+  - business-docs/wiki/shared/mvp-spec.md:318
 updated: 2026-08-29
 ---
 
@@ -19,12 +19,12 @@ lifecycle each candidate wine moves through.
 
 | State | Meaning | Leaves the pipeline? |
 | --- | --- | --- |
-| `candidate` | In the set selected by `source` (`README.md:249`) | no |
-| `filtered_out` | Failed a hard filter — absent from the result entirely (`README.md:282`) | yes, terminal |
+| `candidate` | In the set selected by `source` (`business-docs/wiki/shared/mvp-spec.md:263`) | no |
+| `filtered_out` | Failed a hard filter — absent from the result entirely (`business-docs/wiki/shared/mvp-spec.md:296`) | yes, terminal |
 | `scored` | Survived filters, has a score in `0..1` and at least one reason | no |
 | `ranked` | Ordered by score and inside `limit` | no |
 | `truncated` | Scored, but below the `limit` cut | yes, terminal |
-| `returned` | In the response array (`README.md:257-271`) | yes, terminal |
+| `returned` | In the response array (`business-docs/wiki/shared/mvp-spec.md:271-285`) | yes, terminal |
 
 `filtered_out` and `truncated` are indistinguishable to the caller: both are simply
 absent. Nothing in the response says *why* a wine is missing, only why a present one is
@@ -37,28 +37,28 @@ explain inclusion, never exclusion.
 | From | Event | To | Guard |
 | --- | --- | --- | --- |
 | `candidate` | fails any hard filter | `filtered_out` | any of the four filters in [[recommendation-engine-flow]] |
-| `candidate` | `source: "cellar"` and no stock | `filtered_out` | `quantity > 0 AND status = in_cellar` fails (`README.md:285`) |
-| `candidate` | in `prefs.dislikes`, request silent | `filtered_out` | `README.md:287` |
-| `candidate` | in `prefs.dislikes`, request asks for it | `scored` | request wins (`README.md:288`) |
-| `candidate` | passes all filters | `scored` | weighted sum over available components (`README.md:290`) |
+| `candidate` | `source: "cellar"` and no stock | `filtered_out` | `quantity > 0 AND status = in_cellar` fails (`business-docs/wiki/shared/mvp-spec.md:299`) |
+| `candidate` | in `prefs.dislikes`, request silent | `filtered_out` | `business-docs/wiki/shared/mvp-spec.md:301` |
+| `candidate` | in `prefs.dislikes`, request asks for it | `scored` | request wins (`business-docs/wiki/shared/mvp-spec.md:302`) |
+| `candidate` | passes all filters | `scored` | weighted sum over available components (`business-docs/wiki/shared/mvp-spec.md:304`) |
 | `scored` | sort by score, apply `limit` | `ranked` \| `truncated` | tie-break undefined |
-| `ranked` | serialize | `returned` | must carry ≥ 1 reason (`README.md:407`) |
+| `ranked` | serialize | `returned` | must carry ≥ 1 reason (`business-docs/wiki/shared/mvp-spec.md:421`) |
 
 ## Scoring state per candidate
 
 | Field | Type | Meaning | Default |
 | --- | --- | --- | --- |
-| `food_pairing` | `0..1` \| absent | Request `food` vs. `food_pairings` plus the built-in table (`README.md:294`) | absent when the request has no `food` or the wine has no `food_pairings` |
-| `palate_fit` | `0..1` \| absent | Distance on the 5-point scale between `prefs` and the wine (`README.md:295`) | absent when `use_prefs: false`, no prefs row, or the wine's palate fields are null |
-| `personal_history` | `0..1` \| absent | Caller's ratings of the wine, grape, region, producer (`README.md:296`) | absent when the caller has no relevant reviews |
-| `preference_match` | `0..1` \| absent | Overlap with `prefs.likes` and the request's soft `grapes` (`README.md:297`) | absent when neither is present |
-| `budget_fit` | `0..1` \| absent | `1.0` inside the band, decaying outside (`README.md:298`) | absent when the wine has no `avg_price` or there is no band |
-| `drink_window_urgency` | `0..1` \| absent | Cellar bottles closing their window nudge up (`README.md:299`) | absent for catalogue-only candidates and for cellar items with no `drink_until` |
-| `score` | `0..1` | Weighted sum of the present components, renormalized (`README.md:290`, `README.md:304-305`) | — |
-| `reasons` | `string[]` | One per contributing component (`README.md:263-268`) | never empty (`README.md:407`) |
-| `penalties` | `string[]` | Stated downward pulls (`README.md:269`) | may be empty |
-| `in_cellar` | `bool` | Whether the caller owns it (`README.md:260`) | — |
-| `quantity` | `int` | Bottles held (`README.md:261`) | — |
+| `food_pairing` | `0..1` \| absent | Request `food` vs. `food_pairings` plus the built-in table (`business-docs/wiki/shared/mvp-spec.md:308`) | absent when the request has no `food` or the wine has no `food_pairings` |
+| `palate_fit` | `0..1` \| absent | Distance on the 5-point scale between `prefs` and the wine (`business-docs/wiki/shared/mvp-spec.md:309`) | absent when `use_prefs: false`, no prefs row, or the wine's palate fields are null |
+| `personal_history` | `0..1` \| absent | Caller's ratings of the wine, grape, region, producer (`business-docs/wiki/shared/mvp-spec.md:310`) | absent when the caller has no relevant reviews |
+| `preference_match` | `0..1` \| absent | Overlap with `prefs.likes` and the request's soft `grapes` (`business-docs/wiki/shared/mvp-spec.md:311`) | absent when neither is present |
+| `budget_fit` | `0..1` \| absent | `1.0` inside the band, decaying outside (`business-docs/wiki/shared/mvp-spec.md:312`) | absent when the wine has no `avg_price` or there is no band |
+| `drink_window_urgency` | `0..1` \| absent | Cellar bottles closing their window nudge up (`business-docs/wiki/shared/mvp-spec.md:313`) | absent for catalogue-only candidates and for cellar items with no `drink_until` |
+| `score` | `0..1` | Weighted sum of the present components, renormalized (`business-docs/wiki/shared/mvp-spec.md:304`, `business-docs/wiki/shared/mvp-spec.md:318-319`) | — |
+| `reasons` | `string[]` | One per contributing component (`business-docs/wiki/shared/mvp-spec.md:277-282`) | never empty (`business-docs/wiki/shared/mvp-spec.md:421`) |
+| `penalties` | `string[]` | Stated downward pulls (`business-docs/wiki/shared/mvp-spec.md:283`) | may be empty |
+| `in_cellar` | `bool` | Whether the caller owns it (`business-docs/wiki/shared/mvp-spec.md:274`) | — |
+| `quantity` | `int` | Bottles held (`business-docs/wiki/shared/mvp-spec.md:275`) | — |
 
 **Absent is not zero.** That distinction is the whole of
 [ADR-0006](../../decisions/0006-missing-data-never-penalizes.md), and it is the single
@@ -85,8 +85,8 @@ dividing by 6, or by 1.0, reintroduces exactly the penalty
 
 ```
 if wine matches prefs.dislikes.grapes|regions:
-    if request explicitly named that grape or region:  keep     # README.md:288
-    else:                                              filter   # README.md:287
+    if request explicitly named that grape or region:  keep     # business-docs/wiki/shared/mvp-spec.md:302
+    else:                                              filter   # business-docs/wiki/shared/mvp-spec.md:301
 ```
 
 ### `source`
@@ -101,7 +101,7 @@ if wine matches prefs.dislikes.grapes|regions:
 
 Per request, in memory, discarded when the tool call returns. Nothing survives it: no
 cache, no session, no Durable Object state. `McpAgent` is a Durable Object
-(`README.md:375`), so a durable place to keep state exists — the engine deliberately uses
+(`business-docs/wiki/shared/mvp-spec.md:389`), so a durable place to keep state exists — the engine deliberately uses
 none of it, which is what makes `deterministic-no-llm` observable rather than merely
 claimed.
 
@@ -109,6 +109,6 @@ claimed.
 
 | State | Problem |
 | --- | --- |
-| Zero present components | `Σ weight[c] = 0`. The formula divides by zero, and the entry could carry no reasons, violating `README.md:407`. Neither an error nor a fallback score is specified. |
+| Zero present components | `Σ weight[c] = 0`. The formula divides by zero, and the entry could carry no reasons, violating `business-docs/wiki/shared/mvp-spec.md:421`. Neither an error nor a fallback score is specified. |
 | Equal scores | No tie-break key is given. Any implicit one is an unexplained ordering influence, which [ADR-0005](../../decisions/0005-every-point-of-score-maps-to-a-reason.md) forbids. |
 | The same wine in both cellar and catalogue under `source: "both"` | Whether it is deduplicated is unspecified. |

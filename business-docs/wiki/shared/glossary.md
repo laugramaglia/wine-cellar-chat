@@ -3,7 +3,7 @@ page: glossary
 status: stub
 updated: 2026-08-29
 code_refs:
-  - README.md:43
+  - business-docs/wiki/shared/mvp-spec.md:57
 ---
 
 # Glossary

@@ -1,6 +1,6 @@
 {
   "_source": "business-docs/wiki/features/user-administration",
-  "derived_by": "business-rules-keeper",
+  "derived_by": "hand",
   "feature": "user-administration",
   "updated": "2026-08-29",
   "rules": [
@@ -9,7 +9,11 @@
       "statement": "User created and role changed are written to audit_log.",
       "value": "2 of 4 tools",
       "page": "index",
-      "code_refs": ["README.md:345", "README.md:346", "README.md:347"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:359",
+        "business-docs/wiki/shared/mvp-spec.md:360",
+        "business-docs/wiki/shared/mvp-spec.md:361"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -18,7 +22,9 @@
       "statement": "All four account tools require one permission.",
       "value": "admin:users",
       "page": "index",
-      "code_refs": ["README.md:127"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:141"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -27,7 +33,9 @@
       "statement": "Wines the user contributed stay in the shared catalogue, at any delete depth.",
       "value": "always kept",
       "page": "index",
-      "code_refs": ["README.md:222"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:236"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -36,8 +44,13 @@
       "statement": "user_delete sets status = deleted and revokes the tokens.",
       "value": "soft",
       "page": "index",
-      "code_refs": ["README.md:220", "README.md:221"],
-      "adrs": ["0012"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:234",
+        "business-docs/wiki/shared/mvp-spec.md:235"
+      ],
+      "adrs": [
+        "0012"
+      ],
       "status": "aspirational"
     },
     {
@@ -45,8 +58,13 @@
       "statement": "The last remaining active admin cannot be demoted, suspended, or deleted.",
       "value": "reject when target is admin, status = active, and no other admin has status = active",
       "page": "validations",
-      "code_refs": ["README.md:217", "README.md:218"],
-      "adrs": ["0013"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:231",
+        "business-docs/wiki/shared/mvp-spec.md:232"
+      ],
+      "adrs": [
+        "0013"
+      ],
       "status": "aspirational"
     },
     {
@@ -54,8 +72,13 @@
       "statement": "An admin cannot demote themselves.",
       "value": "reject when target_id == props.userId and role != 'admin'",
       "page": "validations",
-      "code_refs": ["README.md:216", "README.md:217"],
-      "adrs": ["0013"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:230",
+        "business-docs/wiki/shared/mvp-spec.md:231"
+      ],
+      "adrs": [
+        "0013"
+      ],
       "status": "aspirational"
     },
     {
@@ -63,8 +86,13 @@
       "statement": "An admin cannot suspend themselves.",
       "value": "reject when target_id == props.userId and status != 'active'",
       "page": "validations",
-      "code_refs": ["README.md:216", "README.md:217"],
-      "adrs": ["0013"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:230",
+        "business-docs/wiki/shared/mvp-spec.md:231"
+      ],
+      "adrs": [
+        "0013"
+      ],
       "status": "aspirational"
     },
     {
@@ -72,7 +100,9 @@
       "statement": "hard: true additionally drops the user's cellar items and reviews.",
       "value": "hard: true",
       "page": "index",
-      "code_refs": ["README.md:221"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:235"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -81,8 +111,12 @@
       "statement": "The plaintext token appears in the user_create response and nowhere, ever, again.",
       "value": "exactly once",
       "page": "index",
-      "code_refs": ["README.md:211"],
-      "adrs": ["0012"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:225"
+      ],
+      "adrs": [
+        "0012"
+      ],
       "status": "aspirational"
     },
     {
@@ -90,7 +124,10 @@
       "statement": "Suspending a user makes every one of their tokens fail at the next request.",
       "value": "next request",
       "page": "index",
-      "code_refs": ["README.md:216", "README.md:413"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:230",
+        "business-docs/wiki/shared/mvp-spec.md:427"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -99,7 +136,9 @@
       "statement": "role defaults when not supplied.",
       "value": "member",
       "page": "index",
-      "code_refs": ["README.md:208"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:222"
+      ],
       "adrs": [],
       "status": "aspirational"
     },
@@ -108,22 +147,106 @@
       "statement": "issue_token: true with a token_label creates the account and returns its first key in the same call.",
       "value": "one call",
       "page": "index",
-      "code_refs": ["README.md:208", "README.md:209", "README.md:210"],
-      "adrs": ["0012"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:222",
+        "business-docs/wiki/shared/mvp-spec.md:223",
+        "business-docs/wiki/shared/mvp-spec.md:224"
+      ],
+      "adrs": [
+        "0012"
+      ],
       "status": "aspirational"
     },
     {
       "id": "user-update-fields",
       "statement": "user_update changes role or status and nothing else.",
-      "value": ["role", "status"],
+      "value": [
+        "role",
+        "status"
+      ],
       "page": "index",
-      "code_refs": ["README.md:215"],
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:229"
+      ],
       "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "deleted-is-a-user-status",
+      "statement": "user.status is active, suspended or deleted; soft delete sets deleted and keeps the row so foreign keys keep resolving.",
+      "value": [
+        "active",
+        "suspended",
+        "deleted"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0017-deletion-is-a-status-and-email-is-unique-among-the-living.md"
+      ],
+      "adrs": [
+        "0017"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "email-unique-among-living",
+      "statement": "email is citext, format-checked, and unique only across accounts whose status is not deleted, so a soft-deleted account releases its address.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0017-deletion-is-a-status-and-email-is-unique-among-the-living.md"
+      ],
+      "adrs": [
+        "0017"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "email-is-not-a-stable-identity",
+      "statement": "Because a soft-deleted address can be reused, email does not identify a person across time; users.id does, and audit_log stores the id.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0017-deletion-is-a-status-and-email-is-unique-among-the-living.md"
+      ],
+      "adrs": [
+        "0017"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "user-prefs-cascade-on-delete",
+      "statement": "user_prefs is keyed on user_id and cascades on both soft and hard delete; the specification omitted it from both depths.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0017-deletion-is-a-status-and-email-is-unique-among-the-living.md"
+      ],
+      "adrs": [
+        "0017"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "role-and-status-are-database-types",
+      "statement": "user_role and user_status are Postgres enum types, so an out-of-enum value cannot be stored by any write path including the bootstrap script.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0015-closed-enumerations-are-database-types.md"
+      ],
+      "adrs": [
+        "0015"
+      ],
       "status": "aspirational"
     }
   ],
   "enums": {
-    "role": ["admin", "member", "guest"],
-    "status": ["active", "suspended"]
+    "role": [
+      "admin",
+      "member",
+      "guest"
+    ],
+    "status": [
+      "active",
+      "suspended",
+      "deleted"
+    ]
   }
 }
