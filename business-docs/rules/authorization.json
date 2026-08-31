@@ -1,0 +1,415 @@
+{
+  "_source": "business-docs/wiki/features/authorization",
+  "derived_by": "hand",
+  "feature": "authorization",
+  "updated": "2026-08-29",
+  "rules": [
+    {
+      "id": "auth-precedes-authorization",
+      "statement": "Unknown, revoked, or expired tokens, and tokens whose user is suspended, get 401 at the edge before any permission check.",
+      "value": 401,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:157",
+        "business-docs/wiki/shared/mvp-spec.md:158",
+        "business-docs/wiki/shared/mvp-spec.md:159"
+      ],
+      "adrs": [
+        "0010"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "denial-is-explicit-and-boring",
+      "statement": "A denial names the tool, the required permission, and the caller's role, so the agent reports instead of retrying.",
+      "value": "Permission denied: 'user_create' requires 'admin:users'; your role is 'member'.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:153",
+        "business-docs/wiki/shared/mvp-spec.md:154",
+        "business-docs/wiki/shared/mvp-spec.md:155"
+      ],
+      "adrs": [
+        "0010"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "enforcement-layer-execution",
+      "statement": "Every handler re-checks the permission before doing any work; this is the security boundary.",
+      "value": null,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:149",
+        "business-docs/wiki/shared/mvp-spec.md:150",
+        "business-docs/wiki/shared/mvp-spec.md:151"
+      ],
+      "adrs": [
+        "0010"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "enforcement-layer-visibility",
+      "statement": "tools/list returns only the tools the caller is permitted to call.",
+      "value": null,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:146",
+        "business-docs/wiki/shared/mvp-spec.md:147",
+        "business-docs/wiki/shared/mvp-spec.md:148"
+      ],
+      "adrs": [
+        "0010"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "every-tool-declares-one-permission",
+      "statement": "Each tool declares one required permission — not zero, not a set.",
+      "value": "one",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:126"
+      ],
+      "adrs": [
+        "0011"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "guest-holds-four-permissions",
+      "statement": "guest holds catalog:read, review:read, prefs:read, recommend and nothing else.",
+      "value": [
+        "catalog:read",
+        "review:read",
+        "prefs:read",
+        "recommend"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:132",
+        "business-docs/wiki/shared/mvp-spec.md:136",
+        "business-docs/wiki/shared/mvp-spec.md:138",
+        "business-docs/wiki/shared/mvp-spec.md:140"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "no-tool-relies-on-being-hidden",
+      "statement": "A tool must never rely on having been hidden.",
+      "value": null,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:150",
+        "business-docs/wiki/shared/mvp-spec.md:151"
+      ],
+      "adrs": [
+        "0010"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "null-scopes-inherit-role-in-full",
+      "statement": "api_tokens.scopes = null means the token inherits the user's role in full.",
+      "value": null,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:77",
+        "business-docs/wiki/shared/mvp-spec.md:78",
+        "business-docs/wiki/shared/mvp-spec.md:346"
+      ],
+      "adrs": [
+        "0003"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "permission-admin-tokens",
+      "statement": "admin:tokens gates token_create, token_list, and token_revoke; held by admin only.",
+      "value": [
+        "admin"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:142"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "permission-admin-users",
+      "statement": "admin:users gates user_create, user_list, user_update, and user_delete; held by admin only.",
+      "value": [
+        "admin"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:141"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "permission-catalog-read",
+      "statement": "catalog:read gates wine_search and wine_get; held by admin, member, and guest.",
+      "value": [
+        "admin",
+        "member",
+        "guest"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:132"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "permission-catalog-write",
+      "statement": "catalog:write gates wine_upsert; held by admin and member, not guest.",
+      "value": [
+        "admin",
+        "member"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:133"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "permission-cellar-read",
+      "statement": "cellar:read gates cellar_list; held by admin and member, not guest.",
+      "value": [
+        "admin",
+        "member"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:134"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "permission-cellar-write",
+      "statement": "cellar:write gates cellar_add and cellar_update; held by admin and member, not guest.",
+      "value": [
+        "admin",
+        "member"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:135"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "permission-held-is-a-conjunction",
+      "statement": "A caller holds a permission if their role grants it and, when the token has explicit scopes, the token grants it too.",
+      "value": "role ∧ (scopes ?? all)",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:126",
+        "business-docs/wiki/shared/mvp-spec.md:127"
+      ],
+      "adrs": [
+        "0003"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "permission-prefs-read",
+      "statement": "prefs:read gates prefs_get; held by admin, member, and guest.",
+      "value": [
+        "admin",
+        "member",
+        "guest"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:138"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "permission-prefs-write",
+      "statement": "prefs:write gates prefs_set; held by admin and member, not guest.",
+      "value": [
+        "admin",
+        "member"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:139"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "permission-recommend",
+      "statement": "recommend gates wine_recommend; held by admin, member, and guest.",
+      "value": [
+        "admin",
+        "member",
+        "guest"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:140"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "permission-resolution",
+      "statement": "permissions = role_permissions(user.role) ∩ (token.scopes ?? everything), computed once per request and carried on props.",
+      "value": "permissions = role_permissions(user.role) ∩ (token.scopes ?? everything)",
+      "page": "states",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:346"
+      ],
+      "adrs": [
+        "0003"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "permission-review-read",
+      "statement": "review:read gates review_list; held by admin, member, and guest.",
+      "value": [
+        "admin",
+        "member",
+        "guest"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:136"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "permission-review-write",
+      "statement": "review:write gates review_write; held by admin and member, not guest.",
+      "value": [
+        "admin",
+        "member"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:137"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "roles-are-three-fixed",
+      "statement": "Exactly three roles exist; no custom roles or per-user grants in the MVP.",
+      "value": [
+        "admin",
+        "member",
+        "guest"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:72",
+        "business-docs/wiki/shared/mvp-spec.md:435"
+      ],
+      "adrs": [
+        "0003"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "token-narrows-never-widens",
+      "statement": "A token can only ever narrow what its user's role allows, never widen it.",
+      "value": null,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:128"
+      ],
+      "adrs": [
+        "0003"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "tool-permissions-is-exhaustive",
+      "statement": "The tool→permission map is one TOOL_PERMISSIONS record; adding a tool without a permission is a type error, not a hole.",
+      "value": "compile error",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:161",
+        "business-docs/wiki/shared/mvp-spec.md:162",
+        "business-docs/wiki/shared/mvp-spec.md:428"
+      ],
+      "adrs": [
+        "0011"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "role-outside-enum-unstorable",
+      "statement": "users.role is a Postgres enum type, so a value outside admin, member or guest cannot be stored by any write path; the previously undefined behaviour is now unreachable.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0015-closed-enumerations-are-database-types.md"
+      ],
+      "adrs": [
+        "0015"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "empty-scopes-cannot-exist",
+      "statement": "NULL is the only spelling of inherit-the-role-in-full; an empty scopes array, which reads to a human as grant-nothing, cannot be stored.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0018-token-identity-is-constrained-in-the-database.md"
+      ],
+      "adrs": [
+        "0018"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "oauth-grant-narrowed-three-times",
+      "statement": "An OAuth grant is `role_permissions(role)` ∩ the identifying token's scopes ∩ the scopes the client requested, so a grant can never exceed the token that authorized it.",
+      "value": "three-way intersection",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0022-oauth-alongside-bearer-tokens.md"
+      ],
+      "adrs": [
+        "0022"
+      ],
+      "status": "aspirational"
+    }
+  ],
+  "enums": {
+    "roles": [
+      "admin",
+      "member",
+      "guest"
+    ],
+    "permissions": [
+      "catalog:read",
+      "catalog:write",
+      "cellar:read",
+      "cellar:write",
+      "review:read",
+      "review:write",
+      "prefs:read",
+      "prefs:write",
+      "recommend",
+      "admin:users",
+      "admin:tokens"
+    ]
+  }
+}

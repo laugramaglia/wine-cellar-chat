@@ -1,0 +1,352 @@
+{
+  "_source": "business-docs/wiki/features/wine-catalog",
+  "derived_by": "hand",
+  "feature": "wine-catalog",
+  "updated": "2026-08-29",
+  "rules": [
+    {
+      "id": "wine-catalogue-is-shared",
+      "statement": "One catalogue, visible and writable by every user. It is not per-account.",
+      "value": "shared",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:61"
+      ],
+      "adrs": [
+        "0008"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-get-composition",
+      "statement": "wine_get returns the wine, the caller's cellar holdings, the caller's reviews, and the aggregate rating across all users.",
+      "value": "4 parts",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:188"
+      ],
+      "adrs": [
+        "0008"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-identity-key",
+      "statement": "A bottling is identified by producer, name and vintage, case-insensitively on the two strings.",
+      "value": "UNIQUE (lower(producer), lower(name), vintage)",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:88"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-name-required",
+      "statement": "name is the only required field on a wine. Everything else is optional.",
+      "value": "name",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:105"
+      ],
+      "adrs": [
+        "0006"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-read-permission",
+      "statement": "wine_search and wine_get require catalog:read, held by admin, member and guest.",
+      "value": "catalog:read",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:132"
+      ],
+      "adrs": [
+        "0010"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-search-free-text-fields",
+      "statement": "query is free text over name, producer, region and notes.",
+      "value": [
+        "name",
+        "producer",
+        "region",
+        "notes"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:183"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-search-limit-default",
+      "statement": "wine_search returns 10 results when limit is not given.",
+      "value": 10,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:185"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-search-limit-max",
+      "statement": "limit is capped at 50.",
+      "value": 50,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:185"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-search-per-caller-ownership",
+      "statement": "Each search result carries an owned flag and a quantity for the calling user.",
+      "value": [
+        "owned",
+        "quantity"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:186"
+      ],
+      "adrs": [
+        "0008"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-server-takes-no-images",
+      "statement": "The server accepts structured fields only; image upload or storage of any kind is out of scope.",
+      "value": "none",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:44",
+        "business-docs/wiki/shared/mvp-spec.md:52"
+      ],
+      "adrs": [
+        "0009"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-survives-user-deletion",
+      "statement": "Wines contributed by a deleted user stay in the shared catalogue.",
+      "value": "retained",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:236"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-upsert-fills-blanks",
+      "statement": "wine_upsert writes a field only where the stored value is null.",
+      "value": "fill-only",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:177"
+      ],
+      "adrs": [
+        "0007"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-upsert-overwrite-flag",
+      "statement": "A non-null field is replaced only when the caller passes overwrite: true.",
+      "value": "overwrite: true",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:178"
+      ],
+      "adrs": [
+        "0007"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-upsert-reports-change",
+      "statement": "The result reports whether the row was created and which fields the call filled.",
+      "value": "created: bool, fields_filled: string[]",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:180"
+      ],
+      "adrs": [
+        "0007"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-upsert-target-by-id",
+      "statement": "With wine_id, the upsert targets that row; without it, it matches on (producer, name, vintage).",
+      "value": "wine_id else match",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:175"
+      ],
+      "adrs": [
+        "0007"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-vintage-nullable",
+      "statement": "vintage is nullable; null means non-vintage (NV).",
+      "value": "null = NV",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:84"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-write-permission",
+      "statement": "wine_upsert requires catalog:write, admin and member only; a guest cannot write.",
+      "value": "catalog:write",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:133"
+      ],
+      "adrs": [
+        "0010"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "nv-identity-nulls-not-distinct",
+      "statement": "The wine identity index is UNIQUE (lower(producer), lower(name), vintage) NULLS NOT DISTINCT, so two non-vintage bottlings of the same wine collide.",
+      "value": "UNIQUE (lower(producer), lower(name), vintage) NULLS NOT DISTINCT",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0016-nv-is-a-value-in-the-wine-identity-key.md"
+      ],
+      "adrs": [
+        "0016"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "nv-lookup-is-not-distinct-from",
+      "statement": "The natural-key lookup in the wine_upsert path must use vintage IS NOT DISTINCT FROM, never =; a plain = misses the NV row the index would refuse to duplicate.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0016-nv-is-a-value-in-the-wine-identity-key.md"
+      ],
+      "adrs": [
+        "0016"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "search-is-tsvector-plus-trigram",
+      "statement": "wine_search matches a stored generated tsvector over name, producer, region, subregion, country and tasting_notes, weighted A-D, plus trigram indexes on name and producer.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0021-wine-search-is-full-text-plus-trigram.md"
+      ],
+      "adrs": [
+        "0021"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "search-is-always-parameterized",
+      "statement": "Every value reaching SQL in wine_search is a bound parameter, including the optional structured filters; no branch builds SQL by string concatenation.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0021-wine-search-is-full-text-plus-trigram.md"
+      ],
+      "adrs": [
+        "0021"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "search-config-is-simple",
+      "statement": "The text search configuration is 'simple', not 'english', because the corpus is multilingual proper nouns that English stemming mangles.",
+      "value": "simple",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0021-wine-search-is-full-text-plus-trigram.md"
+      ],
+      "adrs": [
+        "0021"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "catalog-string-bounds",
+      "statement": "Catalogue strings are length-bounded at the column: 300 name and producer, 200 region and subregion, 100 country, 8000 tasting_notes.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0020-bounds-are-enforced-in-the-database-too.md"
+      ],
+      "adrs": [
+        "0020"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "text-arrays-are-not-null",
+      "statement": "grapes, style_tags and food_pairings are NOT NULL with an empty-array default, so empty has exactly one representation for the fill-blanks merge and the engine's overlap tests.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0020-bounds-are-enforced-in-the-database-too.md"
+      ],
+      "adrs": [
+        "0020",
+        "0007"
+      ],
+      "status": "aspirational"
+    }
+  ],
+  "enums": {
+    "wine_type": [
+      "red",
+      "white",
+      "rose",
+      "sparkling",
+      "orange",
+      "dessert",
+      "fortified"
+    ],
+    "sweetness": [
+      "bone_dry",
+      "dry",
+      "off_dry",
+      "medium_sweet",
+      "sweet"
+    ],
+    "body": [
+      "low",
+      "medium_minus",
+      "medium",
+      "medium_plus",
+      "high"
+    ],
+    "tannin": [
+      "low",
+      "medium_minus",
+      "medium",
+      "medium_plus",
+      "high"
+    ],
+    "acidity": [
+      "low",
+      "medium_minus",
+      "medium",
+      "medium_plus",
+      "high"
+    ]
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "_source": "business-docs/wiki/features/reviews",
+  "derived_by": "hand",
+  "feature": "reviews",
+  "updated": "2026-08-29",
+  "rules": [
+    {
+      "id": "review-consume-decrements-cellar",
+      "statement": "review_write with consume: true decrements the caller's cellar for that wine.",
+      "value": "consume: true",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:207"
+      ],
+      "adrs": [
+        "0008"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-feeds-personal-history",
+      "statement": "The caller's ratings feed the engine's personal-history component, weight 0.20, matched on wine, grape, region and producer.",
+      "value": 0.2,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:310"
+      ],
+      "adrs": [
+        "0004",
+        "0005"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-list-filters",
+      "statement": "review_list filters on wine_id, min_rating, since, limit.",
+      "value": [
+        "wine_id",
+        "min_rating",
+        "since",
+        "limit"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:209",
+        "business-docs/wiki/shared/mvp-spec.md:210"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-no-edit-or-delete",
+      "statement": "No review_update or review_delete tool exists. A review, once written, has no specified way back out.",
+      "value": "absent",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:204",
+        "business-docs/wiki/shared/mvp-spec.md:210"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-owner-is-the-caller",
+      "statement": "user_id is resolved from the bearer token, never from tool input. No review tool takes a user_id.",
+      "value": null,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:168",
+        "business-docs/wiki/shared/mvp-spec.md:170",
+        "business-docs/wiki/shared/mvp-spec.md:350",
+        "business-docs/wiki/shared/mvp-spec.md:352"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-rating-scale",
+      "statement": "Rating is on a 1-100 scale.",
+      "value": "1-100",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:94",
+        "business-docs/wiki/shared/mvp-spec.md:206"
+      ],
+      "adrs": [
+        "0005"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-read-permission",
+      "statement": "review_list requires review:read, which guest also holds.",
+      "value": "review:read",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:136"
+      ],
+      "adrs": [
+        "0010"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-row-shape",
+      "statement": "A review row is id, user_id, wine_id, rating, drank_on, occasion, body_text, would_buy_again, created_at.",
+      "value": [
+        "id",
+        "user_id",
+        "wine_id",
+        "rating",
+        "drank_on",
+        "occasion",
+        "body_text",
+        "would_buy_again",
+        "created_at"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:94",
+        "business-docs/wiki/shared/mvp-spec.md:95"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-write-permission",
+      "statement": "review_write requires review:write, admin and member only.",
+      "value": "review:write",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:137"
+      ],
+      "adrs": [
+        "0010"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "wine-get-aggregate-is-global",
+      "statement": "wine_get returns an aggregate rating across all users, alongside the caller's own reviews.",
+      "value": "all users",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:188",
+        "business-docs/wiki/shared/mvp-spec.md:189"
+      ],
+      "adrs": [
+        "0005"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "rating-bound-enforced-in-both-layers",
+      "statement": "The 1-100 rating bound is enforced in the tool's zod schema and as a column CHECK; zod produces the message, the column guarantees the range.",
+      "value": "CHECK (rating BETWEEN 1 AND 100)",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0020-bounds-are-enforced-in-the-database-too.md"
+      ],
+      "adrs": [
+        "0020"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "repeat-reviews-unconstrained",
+      "statement": "No unique constraint exists on (user_id, wine_id): whether one user may review a wine twice is left open deliberately, because it decides what an aggregate rating counts.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0020-bounds-are-enforced-in-the-database-too.md"
+      ],
+      "adrs": [
+        "0020"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "review-text-bounds",
+      "statement": "body_text is bounded at 8000 characters and occasion at 200, because the writer is a language model and the reader is another model's context window.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0020-bounds-are-enforced-in-the-database-too.md"
+      ],
+      "adrs": [
+        "0020"
+      ],
+      "status": "aspirational"
+    }
+  ],
+  "enums": {}
+}

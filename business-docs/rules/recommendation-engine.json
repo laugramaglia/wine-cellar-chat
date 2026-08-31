@@ -1,0 +1,319 @@
+{
+  "_source": "business-docs/wiki/features/recommendation-engine",
+  "derived_by": "hand",
+  "feature": "recommendation-engine",
+  "updated": "2026-08-29",
+  "rules": [
+    {
+      "id": "at-least-one-reason",
+      "statement": "Every returned recommendation carries at least one non-empty reasons entry.",
+      "value": "len(reasons) >= 1",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:421"
+      ],
+      "adrs": [
+        "0005"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "avoid-is-absolute",
+      "statement": "Anything in prefs.avoid is filtered out. No stated override.",
+      "value": "hard filter",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:300"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "budget-inside-band-is-one",
+      "statement": "A price inside the budget band scores 1.0, decaying outside it.",
+      "value": 1.0,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:312"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "component-range-0-1",
+      "statement": "Every scoring component yields a value in 0..1.",
+      "value": "0..1",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:304"
+      ],
+      "adrs": [
+        "0004"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "deterministic-no-llm",
+      "statement": "Same input, same output. No LLM inside the engine.",
+      "value": "deterministic",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:317"
+      ],
+      "adrs": [
+        "0004"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "every-point-has-a-reason",
+      "statement": "A component that cannot be explained in a sentence is not scored.",
+      "value": "contract",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:320"
+      ],
+      "adrs": [
+        "0005"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "incomplete-wine-is-recommendable",
+      "statement": "A wine with only { name, producer } must still be recommendable.",
+      "value": "required",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:422"
+      ],
+      "adrs": [
+        "0006"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "renormalize-on-missing-component",
+      "statement": "An unknown component is dropped and the remaining weights are renormalized. Missing data never lowers a score.",
+      "value": "drop + renormalize",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:318",
+        "business-docs/wiki/shared/mvp-spec.md:319"
+      ],
+      "adrs": [
+        "0006"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "request-beats-dislikes",
+      "statement": "A grape or region in prefs.dislikes is filtered out unless the request explicitly asks for it, in which case the request wins.",
+      "value": "request wins",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:301",
+        "business-docs/wiki/shared/mvp-spec.md:302"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "source-cellar-requires-stock",
+      "statement": "Under source: \"cellar\" a wine must have quantity > 0 and status = in_cellar.",
+      "value": "quantity > 0 AND status = in_cellar",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:299"
+      ],
+      "adrs": [
+        "0008"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "source-default-both",
+      "statement": "source defaults to both when the request omits it.",
+      "value": "both",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:263"
+      ],
+      "adrs": [
+        "0008"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "two-stage-pipeline",
+      "statement": "Scoring is hard filters first, then a weighted score. Filters remove; the score only orders.",
+      "value": "filters → score",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:294"
+      ],
+      "adrs": [
+        "0004"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "use-prefs-default-true",
+      "statement": "use_prefs defaults to true; stored user_prefs apply unless the caller opts out.",
+      "value": true,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:264"
+      ],
+      "adrs": [],
+      "status": "aspirational"
+    },
+    {
+      "id": "weight-budget-fit",
+      "statement": "Budget fit weight.",
+      "value": 0.05,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:312"
+      ],
+      "adrs": [
+        "0004"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "weight-drink-window-urgency",
+      "statement": "Drink-window urgency weight. Cellar candidates only.",
+      "value": 0.05,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:313"
+      ],
+      "adrs": [
+        "0004"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "weight-food-pairing",
+      "statement": "Food pairing weight.",
+      "value": 0.3,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:308"
+      ],
+      "adrs": [
+        "0004"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "weight-palate-fit",
+      "statement": "Palate fit weight.",
+      "value": 0.25,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:309"
+      ],
+      "adrs": [
+        "0004"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "weight-personal-history",
+      "statement": "Personal history weight.",
+      "value": 0.2,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:310"
+      ],
+      "adrs": [
+        "0004"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "weight-preference-match",
+      "statement": "Preference match weight.",
+      "value": 0.15,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:311"
+      ],
+      "adrs": [
+        "0004"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "weights-in-one-config",
+      "statement": "Weights live in one config object, tunable without touching the logic.",
+      "value": "one object",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:321"
+      ],
+      "adrs": [
+        "0004"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "weights-sum-to-one",
+      "statement": "The six stated weights sum to exactly 1.00 before any renormalization.",
+      "value": 1.0,
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/shared/mvp-spec.md:308",
+        "business-docs/wiki/shared/mvp-spec.md:309",
+        "business-docs/wiki/shared/mvp-spec.md:310",
+        "business-docs/wiki/shared/mvp-spec.md:311",
+        "business-docs/wiki/shared/mvp-spec.md:312",
+        "business-docs/wiki/shared/mvp-spec.md:313"
+      ],
+      "adrs": [
+        "0004"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "palate-scale-is-one-ordered-type",
+      "statement": "body, tannin and acidity share one Postgres intensity type whose declaration order is the scale order, so the palate-fit component can compare and order in SQL. The numeric distance between adjacent points is still undecided.",
+      "value": [
+        "low",
+        "medium_minus",
+        "medium",
+        "medium_plus",
+        "high"
+      ],
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0015-closed-enumerations-are-database-types.md"
+      ],
+      "adrs": [
+        "0015"
+      ],
+      "status": "aspirational"
+    },
+    {
+      "id": "candidate-retrieval-is-deterministic",
+      "statement": "Candidate retrieval ranks by ts_rank over a stored weighted tsvector, extending the engine's determinism requirement to the step that feeds it candidates.",
+      "page": "index",
+      "code_refs": [
+        "business-docs/wiki/decisions/0021-wine-search-is-full-text-plus-trigram.md"
+      ],
+      "adrs": [
+        "0021",
+        "0004"
+      ],
+      "status": "aspirational"
+    }
+  ],
+  "enums": {
+    "recommend_source": [
+      "cellar",
+      "catalog",
+      "both"
+    ]
+  }
+}
