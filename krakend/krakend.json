@@ -23,17 +23,29 @@
         },
         "validation/json-schema": {
           "type": "object",
-          "required": ["sender_id", "recipient_id", "content"],
+          "required": [
+            "sender_id",
+            "recipient_id",
+            "content"
+          ],
           "properties": {
-            "sender_id": { "type": "integer" },
-            "recipient_id": { "type": "integer" },
-            "content": { "type": "string" }
+            "sender_id": {
+              "type": "integer"
+            },
+            "recipient_id": {
+              "type": "integer"
+            },
+            "content": {
+              "type": "string"
+            }
           }
         }
       },
       "backend": [
         {
-          "host": ["http://chat_microservice:8080"],
+          "host": [
+            "http://chat_microservice:8080"
+          ],
           "url_pattern": "/api/v1/messages",
           "method": "POST",
           "encoding": "json"
@@ -47,13 +59,24 @@
       "extra_config": {},
       "backend": [
         {
-          "host": ["http://telegram_microservice:8081"],
+          "host": [
+            "http://telegram_microservice:8081"
+          ],
           "url_pattern": "/api/v1/telegram/config",
           "method": "POST",
           "encoding": "json",
           "extra_config": {
             "qos/http-status-validator": {
-              "allowed_statuses": [200, 201, 204, 400, 401, 403, 404, 500]
+              "allowed_statuses": [
+                200,
+                201,
+                204,
+                400,
+                401,
+                403,
+                404,
+                500
+              ]
             }
           }
         }
@@ -66,13 +89,24 @@
       "extra_config": {},
       "backend": [
         {
-          "host": ["http://telegram_microservice:8081"],
+          "host": [
+            "http://telegram_microservice:8081"
+          ],
           "url_pattern": "/api/v1/telegram/webhook",
           "method": "GET",
           "encoding": "json",
           "extra_config": {
             "qos/http-status-validator": {
-              "allowed_statuses": [200, 201, 204, 400, 401, 403, 404, 500]
+              "allowed_statuses": [
+                200,
+                201,
+                204,
+                400,
+                401,
+                403,
+                404,
+                500
+              ]
             }
           }
         }
@@ -85,13 +119,24 @@
       "extra_config": {},
       "backend": [
         {
-          "host": ["http://telegram_microservice:8081"],
+          "host": [
+            "http://telegram_microservice:8081"
+          ],
           "url_pattern": "/api/v1/telegram/webhook",
           "method": "DELETE",
           "encoding": "json",
           "extra_config": {
             "qos/http-status-validator": {
-              "allowed_statuses": [200, 201, 204, 400, 401, 403, 404, 500]
+              "allowed_statuses": [
+                200,
+                201,
+                204,
+                400,
+                401,
+                403,
+                404,
+                500
+              ]
             }
           }
         }
@@ -109,10 +154,13 @@
       "stdout": true
     },
     "router": {
-      "auto_options": true
+      "auto_options": true,
+      "return_error_details": true
     },
     "security/cors": {
-      "allow_origins": ["*"],
+      "allow_origins": [
+        "*"
+      ],
       "allow_methods": [
         "GET",
         "HEAD",
@@ -122,8 +170,16 @@
         "DELETE",
         "OPTIONS"
       ],
-      "allow_headers": ["Origin", "Authorization", "Content-Type", "Accept"],
-      "expose_headers": ["Content-Length", "Content-Type"],
+      "allow_headers": [
+        "Origin",
+        "Authorization",
+        "Content-Type",
+        "Accept"
+      ],
+      "expose_headers": [
+        "Content-Length",
+        "Content-Type"
+      ],
       "max_age": "12h"
     }
   }
