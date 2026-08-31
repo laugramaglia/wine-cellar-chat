@@ -1,0 +1,28 @@
+{
+  "name": "wine-cellar-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "bootstrap-admin": "node --experimental-strip-types scripts/bootstrap-admin.ts"
+  },
+  "dependencies": {
+    "@cloudflare/workers-oauth-provider": "^0.10.3",
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@types/pg": "^8.23.1",
+    "agents": "^0.22.0",
+    "pg": "^8.23.0",
+    "zod": "^4.5.2"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.22.0",
+    "@types/node": "^26.4.0",
+    "typescript": "^5.7.0",
+    "vitest": "~4.1.11",
+    "wrangler": "^4.127.1"
+  }
+}

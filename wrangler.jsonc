@@ -1,0 +1,32 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "wine-cellar-mcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-01-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "f9fea86a23c2416b981dc046d294f3bd",
+      // Local `wrangler dev` talks to Neon directly; in production the binding routes
+      // through Hyperdrive's pooler at the edge.
+      "localConnectionString": "postgresql://neondb_owner:npg_qWvuk9HbJz3K@ep-fragrant-pine-aw1ei9wc.c-12.us-east-1.aws.neon.tech/wine_cellar_mcp?sslmode=require"
+    }
+  ],
+  "kv_namespaces": [
+    { "binding": "OAUTH_KV", "id": "3f33213573b84a44bbc963f7d9279c06" }
+  ],
+  "durable_objects": {
+    "bindings": [
+      { "name": "WINE_MCP", "class_name": "WineMcp" },
+      { "name": "MOCK_DB", "class_name": "MockDb" }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["WineMcp", "MockDb"]
+    }
+  ]
+}
